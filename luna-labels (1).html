@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna Labels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..900;1,62..125,400..900&family=Bebas+Neue&family=Caveat:wght@400;700&family=Inter:wght@400;700;900&family=Lobster&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Roboto+Mono:wght@400;700&family=Roboto+Slab:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --steel:#E6E9EC; --surface:#FFFFFF; --sunk:#F2F4F6; --ink:#16202A; --ink-2:#5A6570; --rule:#D2D7DC;
+    --go:#1E4FD6; --go-press:#183FAD; --go-ink:#FFFFFF; --ok:#17803F; --bad:#B4231A;
+    --day:#F07D1A; --day-ink:#16202A;
+    --r-s:8px; --r-m:12px; --r-l:18px;
+    --bar-h:84px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --steel:#101418; --surface:#1A2027; --sunk:#232A32; --ink:#EEF1F4; --ink-2:#9AA5B0; --rule:#2E3741; --go:#4C7BFF; --go-press:#3A66E6; }
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0}
+  body{background:var(--steel);color:var(--ink);font:16px/1.4 "Archivo",system-ui,sans-serif;font-variation-settings:"wdth" 100;-webkit-font-smoothing:antialiased}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:3px solid var(--go);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+
+  /* ---------- top bar ---------- */
+  .top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--rule)}
+  .top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 18px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .daydot{width:46px;height:46px;border-radius:50%;background:var(--day);color:var(--day-ink);display:grid;place-items:center;font-weight:900;font-size:13px;font-variation-settings:"wdth" 75;letter-spacing:.02em;flex:none;box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}
+  .brand h1{margin:0;font-size:22px;font-weight:850;font-variation-settings:"wdth" 70;letter-spacing:-.005em;line-height:1}
+  .brand small{display:block;color:var(--ink-2);font-size:13px;margin-top:3px}
+  .tabs{display:flex;gap:4px;margin-left:auto;background:var(--sunk);padding:4px;border-radius:var(--r-m)}
+  .tabs a{text-decoration:none;color:var(--ink-2);font-weight:650;padding:9px 16px;border-radius:9px;font-size:15px}
+  .tabs a[aria-current="page"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .conn{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:8px 14px 8px 10px;font-weight:650;font-size:14px;white-space:nowrap}
+  .conn i{width:10px;height:10px;border-radius:50%;background:#A3ACB5;flex:none}
+  .conn.on i{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+  .conn.on{border-color:color-mix(in srgb,var(--ok) 45%,var(--rule))}
+  @media (max-width:760px){
+    .top-in{flex-wrap:wrap;gap:10px;padding:10px 12px}
+    .brand small{display:none}
+    .conn{margin-left:auto}
+    .tabs{order:3;width:100%;margin-left:0}
+    .tabs a{flex:1;text-align:center;padding:9px 6px}
+  }
+
+  main{max-width:1180px;margin:0 auto;padding:18px 18px calc(var(--bar-h) + 40px)}
+  @media (max-width:760px){ main{padding:12px 12px calc(var(--bar-h) + 40px)} }
+  .view[hidden]{display:none}
+
+  /* ---------- shared controls ---------- */
+  .btn{border:1px solid var(--rule);background:var(--surface);border-radius:var(--r-s);padding:10px 14px;font-weight:650;font-size:15px;line-height:1.1;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+  .btn:hover{border-color:var(--ink-2)}
+  .btn.go{background:var(--go);border-color:var(--go);color:var(--go-ink)}
+  .btn.go:hover{background:var(--go-press)}
+  .btn.ghost{border-color:transparent;background:transparent}
+  .btn.danger{color:var(--bad)}
+  .btn.danger-fill{background:var(--bad);border-color:var(--bad);color:#fff}
+  .trashbtn{width:46px;height:46px;border-radius:var(--r-s);border:1px solid var(--rule);background:var(--surface);color:#E0453A;display:grid;place-items:center;margin-left:10px}
+  .trashbtn:hover{background:color-mix(in srgb,#E0453A 14%,var(--surface));border-color:#E0453A}
+  @media (max-width:560px){ .trashbtn{width:40px;height:44px;margin-left:6px} }
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.sm{padding:7px 10px;font-size:14px}
+  input[type=text],input[type=number],input[type=search],select,textarea{background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-s);padding:10px 12px;width:100%}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--go);background:var(--surface)}
+  textarea{resize:vertical;min-height:72px;line-height:1.35}
+  label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--ink-2);font-weight:550}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .rowx{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-l);padding:18px}
+  .panel + .panel{margin-top:14px}
+  .ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 12px}
+  .ph h2{margin:0;font-size:19px;font-weight:800;font-variation-settings:"wdth" 80}
+  .ph p{margin:0;color:var(--ink-2);font-size:14px}
+  .muted{color:var(--ink-2)}
+  .seg{display:inline-flex;background:var(--sunk);border-radius:var(--r-s);padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;border-radius:6px;padding:6px 11px;font-weight:600;font-size:14px;color:var(--ink-2)}
+  .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+  .chk{display:flex;gap:8px;align-items:center;font-size:15px}
+  .chk input{width:18px;height:18px;accent-color:var(--go)}
+
+  /* ---------- print view ---------- */
+  #view-print{max-width:1140px;margin:0 auto}
+  .modebar{display:flex;align-items:center;justify-content:center;gap:12px;margin:22px 0 26px;flex-wrap:wrap}
+  .modes{display:flex;background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:6px;gap:4px}
+  .modes button{border:0;background:none;border-radius:999px;padding:11px 46px;font-family:"Archivo",system-ui,sans-serif;font-style:italic;font-weight:800;font-size:32px;line-height:1.1;color:var(--ink-2);transition:background .15s,color .15s}
+  .modes button:hover{color:var(--ink)}
+  .modes button[aria-selected="true"]{background:var(--steel);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+  .modes button b{font-style:normal;font-size:13px;font-weight:800;vertical-align:super;margin-left:6px;background:var(--go);color:var(--go-ink);border-radius:999px;padding:1px 7px}
+  .savebatch{border:1.5px dashed var(--rule);background:var(--surface);border-radius:999px;padding:16px 20px;font-weight:700;font-variation-settings:"wdth" 75;font-size:19px;color:var(--ink-2)}
+  .savebatch:hover{color:var(--ink);border-color:var(--ink-2)}
+  @media (max-width:760px){ .modes button{padding:9px 18px;font-size:20px} .savebatch{padding:10px 14px;font-size:15px} .modebar{margin:8px 0 14px} }
+  .brow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:16px 18px;border-top:1px solid var(--rule)}
+  .brow:first-child{border-top:0}
+  .brow.on{background:color-mix(in srgb,var(--go) 8%,var(--surface))}
+  .brow strong{display:block;font-size:19px;font-weight:750}
+  .brow span{color:var(--ink-2);font-size:14px}
+  .brow .acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .bsub{background:var(--sunk);border-top:1px solid var(--rule)}
+  .bsub .lrow{background:transparent}
+  .chip{flex:none;display:flex;align-items:center;gap:8px;border:1.5px solid var(--rule);background:var(--surface);border-radius:999px;padding:9px 16px;font-weight:700;font-size:15px}
+  .chip b{font-weight:800;font-variation-settings:"wdth" 75;background:var(--sunk);border-radius:999px;padding:1px 8px;font-size:13px}
+  .chip.on{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+  .chip.on b{background:rgba(255,255,255,.18);color:inherit}
+  .chip.add{border-style:dashed;color:var(--ink-2);font-weight:600}
+  .bmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:34px;margin-bottom:12px}
+  .bmeta .note{font-size:14px;color:var(--ink-2)}
+  .searchwrap{position:relative;margin-bottom:12px}
+  .searchwrap input{padding-left:40px;height:48px;font-size:16px;background:var(--surface)}
+  .searchwrap svg{position:absolute;left:13px;top:14px;color:var(--ink-2)}
+
+  .list{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-l);overflow:hidden}
+  .lrow{display:grid;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;padding:12px 14px;border-top:1px solid var(--rule)}
+  .lrow:first-child{border-top:0}
+  .lrow.has{background:color-mix(in srgb,var(--go) 6%,var(--surface))}
+  .thumb{width:96px;aspect-ratio:2/1;background:#fff;border:1px solid var(--rule);border-radius:5px;object-fit:contain;image-rendering:auto;display:block}
+  .lname{min-width:0}
+  .lname strong{display:block;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lname .lnote{display:block;font-size:13px;color:var(--warn,#B4741A);margin:2px 0 1px;line-height:1.3}
+  .lname button{border:0;background:none;padding:2px 0;color:var(--go);font-weight:600;font-size:14px}
+  .stepper{display:flex;align-items:center;gap:4px}
+  .stepper button{width:46px;height:46px;border-radius:var(--r-s);border:1px solid var(--rule);background:var(--surface);font-size:24px;line-height:1;display:grid;place-items:center;font-weight:400}
+  .stepper button:active{background:var(--sunk)}
+  .stepper input{width:58px;height:46px;text-align:center;font-size:20px;font-weight:750;font-variation-settings:"wdth" 80;padding:0;-moz-appearance:textfield}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .lrow.has .stepper input{background:var(--go);color:var(--go-ink);border-color:var(--go)}
+  @media (max-width:560px){
+    .lrow{grid-template-columns:64px 1fr auto;gap:10px;padding:10px}
+    .thumb{width:64px}
+    .stepper button{width:40px;height:44px}
+    .stepper input{width:46px;height:44px}
+  }
+  .empty{padding:36px 20px;text-align:center;color:var(--ink-2)}
+  .empty h3{margin:0 0 6px;color:var(--ink);font-size:20px;font-weight:800;font-variation-settings:"wdth" 80}
+  .empty p{margin:0 0 16px}
+
+  /* ---------- bottom action bar ---------- */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--rule);box-shadow:0 -6px 20px rgba(0,0,0,.06)}
+  .bar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 18px calc(12px + env(safe-area-inset-bottom))}
+  .bar .sum{flex:1;min-width:0;font-size:14px;color:var(--ink-2);line-height:1.3}
+  .bar .sum strong{display:block;color:var(--ink);font-size:17px}
+  .printbtn{background:var(--go);color:var(--go-ink);border:0;border-radius:var(--r-m);height:58px;padding:0 34px;font-size:20px;font-weight:800;font-variation-settings:"wdth" 85;letter-spacing:.01em;min-width:220px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+  .printbtn:hover{background:var(--go-press)}
+  .printbtn:disabled{background:var(--rule);color:var(--ink-2);cursor:not-allowed}
+  .printbtn.connect{background:var(--ink);color:var(--surface)}
+  @media (max-width:560px){ .printbtn{min-width:0;flex:1.4;padding:0 16px;font-size:18px} .bar .sum{flex:1} }
+
+  /* ---------- design view ---------- */
+  .namebar{display:flex;gap:8px;align-items:center;margin:0 auto 16px;flex-wrap:wrap;max-width:860px}
+  .namebar input{flex:1 1 240px;font-size:17px;font-weight:650;height:44px;background:var(--surface)}
+  .studio{display:grid;grid-template-columns:118px minmax(0,1fr) 250px;gap:16px;align-items:start}
+  .tools,.layers{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-l);padding:14px;position:sticky;top:92px}
+  .tools{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .tool{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);font-weight:700;font-size:14px;padding:8px 6px;border-radius:var(--r-m);width:100%}
+  .tool .tile{width:74px;height:74px;background:#fff;color:#111;border-radius:10px;display:grid;place-items:center;box-shadow:0 0 0 1px var(--rule);transition:box-shadow .12s}
+  .tool:hover .tile{box-shadow:0 0 0 2px var(--go)}
+  .tool:active .tile{transform:scale(.97)}
+  .tool-link{border:0;background:none;color:var(--ink-2);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:4px}
+  .canvascard{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-l);padding:14px}
+  .stage{display:flex;justify-content:center;align-items:center;background:var(--sunk);border-radius:var(--r-m);padding:26px 18px;min-height:240px}
+  .canvaswrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+  #preview{background:#fff;max-width:100%;image-rendering:pixelated;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.18);touch-action:none;cursor:default}
+  #inlineEdit{position:absolute;z-index:4;margin:0;padding:2px 8px;border:2px solid var(--go);border-radius:4px;background:#fff;color:#111;resize:none;overflow:hidden;white-space:pre;box-shadow:0 4px 16px rgba(0,0,0,.2);min-height:0}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:14px}
+  .quick .btn{padding:8px 11px;font-size:14px}
+  .usegrp{display:inline-flex;align-items:center;gap:6px}
+  .usegrp input{width:58px;padding:8px 6px;text-align:center;font-weight:700}
+  .dims{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;color:var(--ink-2);font-size:13px;margin-top:10px;text-align:center}
+  .layers h3{margin:2px 0 12px;font-size:17px;font-weight:800;text-align:center;font-variation-settings:"wdth" 85}
+  .layer{display:flex;align-items:center;gap:2px;border:1px solid var(--rule);border-radius:var(--r-s);background:var(--sunk);margin-bottom:6px}
+  .layer.sel{border-color:var(--go);box-shadow:inset 0 0 0 1px var(--go)}
+  .layer{cursor:grab;position:relative}
+  .layer.dragging{opacity:.45}
+  .layer.drop-above::before,.layer.drop-below::after{content:"";position:absolute;left:6px;right:6px;height:3px;border-radius:2px;background:var(--go)}
+  .layer.drop-above::before{top:-5px}
+  .layer.drop-below::after{bottom:-5px}
+  .lsel{flex:1;min-width:0;display:flex;align-items:center;gap:8px;border:0;background:none;padding:9px 10px;text-align:left;color:var(--ink)}
+  .lsel .k{font-size:11px;font-weight:700;color:var(--ink-2);flex:none;width:36px}
+  .lsel .lt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
+  .lrename{flex:1;min-width:0;height:30px;padding:3px 8px;font-size:15px;background:var(--surface);border:1.5px solid var(--go);border-radius:6px}
+  .ldel{border:0;background:none;color:#E0453A;padding:8px;border-radius:6px;flex:none;display:grid;place-items:center}
+  .ldel:hover{background:color-mix(in srgb,#E0453A 15%,transparent)}
+  .layerbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 10px;min-height:0}
+  .layerbar:has(#selAllText[hidden]):has(#selInfo:empty){display:none}
+  .tb-count{font-weight:700;font-size:13px;padding:0 8px;color:#1E4FD6;white-space:nowrap}
+  .layers-empty{margin:0;font-size:14px;text-align:center}
+  .layers .hint{font-size:12px;color:var(--ink-2);text-align:center;margin:10px 0 0}
+  @media (max-width:1050px){
+    .studio{grid-template-columns:1fr}
+    .tools{flex-direction:row;position:static;justify-content:center;padding:10px}
+    .tool{width:auto;flex-direction:row}
+    .tool .tile{width:44px;height:44px}
+    .tool .tile svg{width:26px;height:26px}
+    .layers{position:static}
+  }
+  /* contextual toolbar */
+  .ctxbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;background:#fff;color:#16202A;border-radius:var(--r-m);padding:5px;box-shadow:0 1px 3px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.06);margin:0 auto 12px;width:fit-content;max-width:100%;position:relative;z-index:6}
+  .ctxbar input,.ctxbar select{background:#F2F4F6;border:1px solid #D2D7DC;color:#16202A;height:34px;padding:4px 8px;font-size:14px;border-radius:7px;width:auto}
+  .ctxbar input:focus,.ctxbar select:focus{background:#fff;border-color:var(--go)}
+  .tb-size{width:66px!important}
+  .tb-btn{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:#16202A;height:34px;padding:0 8px;border-radius:7px;font-weight:600;font-size:14px}
+  .tb-btn:hover,.tb-btn[aria-expanded="true"]{background:#EAEEF2}
+  .tb-sep{width:1px;height:22px;background:#D2D7DC;margin:0 3px}
+  .tb-pop{position:relative}
+  .popover{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:250px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:var(--r-m);box-shadow:0 16px 40px rgba(0,0,0,.28);padding:12px;z-index:20;display:flex;flex-direction:column;gap:10px}
+  .popover .btn{justify-content:flex-start;width:100%}
+  .ctxbar .popover input,.ctxbar .popover select{width:100%;min-width:0;height:38px;background:var(--sunk);border-color:var(--rule);color:var(--ink)}
+  .ctxbar .popover input[type=checkbox]{width:18px;height:18px}
+  .ctxbar .popover input[type=range]{height:auto;background:none;border:0;padding:0}
+  .popover .pair > *{min-width:0}
+  .popover .pair .btn{justify-content:center;text-align:center}
+  .popover .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .popover h4{margin:0;font-size:12px;font-weight:700;color:var(--ink-2)}
+  .tb-font{width:150px}
+  .tb-font .fp-btn{height:34px;min-height:34px;font-size:16px;background:#F2F4F6;border-color:#D2D7DC;color:#16202A;padding:4px 10px}
+  .tb-font .fp-list{min-width:240px}
+  .tb-label{font-weight:700;font-size:14px;padding:0 6px}
+  .tb-mini{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#56616B;padding:0 2px}
+  .tb-mini input{width:68px}
+  .tb-chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;padding:0 8px;color:#16202A}
+  .tb-chk input{width:16px!important;height:16px!important;accent-color:var(--go)}
+  .tb-name{font-weight:600;font-size:14px;padding:0 8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sep{border:0;border-top:1px solid var(--rule);margin:4px 0}
+  .range-l{display:flex;justify-content:space-between}
+  input[type=range]{width:100%;accent-color:var(--go)}
+
+  /* ---------- settings ---------- */
+  .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  @media (max-width:900px){ .sgrid{grid-template-columns:1fr} }
+  .steps{margin:0;padding-left:20px;color:var(--ink-2);font-size:15px}
+  .steps li{margin:6px 0}
+  .steps b{color:var(--ink)}
+  code{background:var(--sunk);padding:1px 5px;border-radius:4px;font-size:13px}
+
+  /* ---------- font picker ---------- */
+  .fontpick{position:relative}
+  .fp-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-s);padding:8px 12px;font-size:19px;line-height:1.2;color:var(--ink);text-align:left;min-height:44px}
+  .fp-btn svg{flex:none;color:var(--ink-2)}
+  .fp-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fp-list{position:absolute;z-index:15;left:0;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-m);box-shadow:0 12px 32px rgba(0,0,0,.18);max-height:340px;overflow:auto;padding:4px}
+  .fp-list button{display:block;width:100%;text-align:left;border:0;background:none;border-radius:6px;padding:8px 12px;font-size:21px;line-height:1.25;color:var(--ink)}
+  .fp-list button:hover,.fp-list button:focus-visible{background:var(--sunk);outline:none}
+  .fp-list button[aria-selected="true"]{background:color-mix(in srgb,var(--go) 12%,var(--surface));color:var(--go)}
+
+  /* ---------- sheet sync ---------- */
+  .syncbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--go) 9%,var(--surface));border:1.5px solid var(--go);border-radius:var(--r-m);padding:12px 14px;margin-bottom:14px}
+  .syncbar > div{flex:1 1 220px}
+  .syncbar strong{display:block;font-size:16px}
+  .syncbar span{color:var(--ink-2);font-size:14px}
+  .synclist{max-height:52vh;overflow:auto;border:1px solid var(--rule);border-radius:var(--r-s)}
+  .synclist h4{margin:0;padding:8px 12px;font-size:13px;color:var(--ink-2);background:var(--sunk);font-weight:700;position:sticky;top:0}
+  .synclist label{display:flex;gap:10px;align-items:center;padding:9px 12px;border-top:1px solid var(--rule);font-size:15px}
+  .synclist label small{color:var(--ink-2);margin-left:auto;white-space:nowrap}
+  .synclist input{width:18px;height:18px;accent-color:var(--go);flex:none}
+  .cats{display:flex;gap:6px;overflow-x:auto;margin:-2px 0 12px;padding-bottom:2px}
+  .cats button{flex:none;border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;color:var(--ink-2)}
+  .cats button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+  .lname em{font-style:normal;font-size:12px;font-weight:600;color:var(--ink-2);background:var(--sunk);border-radius:999px;padding:1px 8px;margin-left:6px}
+
+  /* ---------- toast + dialog ---------- */
+  .toast{position:fixed;left:50%;bottom:calc(var(--bar-h) + 18px);transform:translate(-50%,10px);opacity:0;z-index:40;background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:var(--r-m);font-weight:600;font-size:15px;max-width:min(560px,calc(100% - 24px));box-shadow:0 8px 30px rgba(0,0,0,.25);transition:opacity .2s,transform .2s;pointer-events:none}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast.bad{background:var(--bad);color:#fff}
+  .toast.ok{background:var(--ok);color:#fff}
+  dialog{border:0;border-radius:var(--r-l);padding:0;width:min(440px,calc(100% - 24px));background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  dialog::backdrop{background:rgba(10,15,20,.45)}
+  .dlg{padding:22px}
+  .dlg h3{margin:0 0 6px;font-size:21px;font-weight:800;font-variation-settings:"wdth" 80}
+  .dlg p{margin:0 0 14px;color:var(--ink-2)}
+  .dlg .rowx{justify-content:flex-end;margin-top:16px}
+  .connopts{display:flex;flex-direction:column;gap:8px}
+  .connopts button{text-align:left;padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--rule);background:var(--surface);display:block;width:100%}
+  .connopts button strong{display:block;font-size:17px}
+  .connopts button span{color:var(--ink-2);font-size:14px}
+  .connopts button.primary{border-color:var(--go);box-shadow:inset 0 0 0 1px var(--go)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="daydot" id="daydot" title="Today's day dot">SAT</div>
+      <div>
+        <h1>Luna Labels</h1>
+        <small id="todayText"></small>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#print" data-tab="print">Print</a>
+      <a href="#design" data-tab="design">Design</a>
+      <a href="#settings" data-tab="settings">Settings</a>
+    </nav>
+    <button class="conn" id="connPill" type="button"><i></i><span id="connText">Connect printer</span></button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= PRINT ================= -->
+  <div class="syncbar" id="syncBanner" hidden>
+    <div><strong>Your Google Sheet has changes</strong><span id="syncSummary"></span></div>
+    <button class="btn go" id="syncReview">Review and update</button>
+    <button class="btn ghost" id="syncLater">Not now</button>
+  </div>
+  <section class="view" id="view-print">
+    <div class="modebar">
+      <div class="modes" role="tablist" aria-label="What to print">
+        <button type="button" role="tab" data-mode="prep">Prep</button>
+        <button type="button" role="tab" data-mode="custom">Custom</button>
+        <button type="button" role="tab" data-mode="batch">Batch</button>
+      </div>
+      <button type="button" class="savebatch" id="saveBatchBtn">+ Save as batch</button>
+    </div>
+    <div class="bmeta" id="bmeta"></div>
+    <div class="searchwrap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="search" placeholder="Search labels" autocomplete="off">
+    </div>
+    <div class="cats" id="cats" hidden></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <!-- ================= DESIGN ================= -->
+  <section class="view" id="view-design" hidden>
+    <div class="namebar">
+      <input type="text" id="labelName" placeholder="Label name, e.g. Chicken Salad" aria-label="Label name">
+      <button class="btn go" id="saveLabel">Save label</button>
+      <button class="btn" id="newLabel">New</button>
+      <button class="btn ghost danger" id="deleteLabel" hidden>Delete</button>
+    </div>
+    <div class="studio">
+      <aside class="tools" aria-label="Add to label">
+        <button class="tool" id="addImage" type="button">
+          <span class="tile"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"><rect x="5" y="9" width="38" height="30" rx="3"/><circle cx="17" cy="19" r="3.5"/><path d="m8 35 11-11 8 8 5-5 9 9"/></svg></span>
+          <span>Add image</span>
+        </button>
+        <button class="tool" id="addText" type="button">
+          <span class="tile"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12V5h7M36 5h7v7M43 36v7h-7M12 43H5v-7"/><path d="M14 13h20v5M24 13v22M19 35h10" stroke-width="3.6"/></svg></span>
+          <span>Add text</span>
+        </button>
+        <button class="tool-link" id="addFont" type="button">Upload a font</button>
+        <input type="file" id="imgFile" accept="image/*" hidden>
+        <input type="file" id="fontFile" accept=".ttf,.otf,.woff,.woff2" hidden>
+      </aside>
+
+      <div class="canvascard">
+        <div class="ctxbar" id="editor" role="toolbar" aria-label="Edit"></div>
+        <div class="stage" id="stage">
+          <div class="canvaswrap" id="canvaswrap">
+            <canvas id="preview" aria-label="Label preview"></canvas>
+            <textarea id="inlineEdit" hidden spellcheck="false" aria-label="Edit text"></textarea>
+          </div>
+        </div>
+        <div class="quick">
+          <button class="btn" id="qCenterH" type="button">Center across</button>
+          <button class="btn" id="qCenterV" type="button">Center up-down</button>
+          <button class="btn" id="qDate" type="button">+ Today's date</button>
+          <button class="btn" id="addPrep" type="button">Add prep time</button>
+          <span class="usegrp"><button class="btn" id="addUse" type="button">Add use-by</button><input type="number" id="useDays" value="3" min="0" max="365" aria-label="Use-by days"><span class="muted">days</span></span>
+        </div>
+        <div class="dims"><span id="dims"></span><span>Drag to move (snaps to center, hold Alt to move freely) · Drag handles to resize · Double-click text to type</span></div>
+      </div>
+
+      <aside class="layers" aria-label="On this label">
+        <h3>On this label</h3>
+        <div class="layerbar"><button type="button" class="btn sm" id="selAllText" hidden>Select all text</button><span id="selInfo" class="muted"></span></div>
+        <div id="items"></div>
+        <p class="hint">Top of the list is in front. Drag to reorder, double-click to rename. Shift- or Ctrl-click to pick several. To change text, double-click it on the label.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section class="view" id="view-settings" hidden>
+    <div class="sgrid">
+      <div>
+        <div class="panel">
+          <div class="ph"><h2>Printer</h2><p id="setConnState">Not connected</p></div>
+          <div class="rowx">
+            <button class="btn go" id="setConnBle">Connect Bluetooth</button>
+            <button class="btn" id="setConnUsb">Connect USB / COM</button>
+            <button class="btn ghost" id="setDisconnect" hidden>Disconnect (let PrepWizard use it)</button>
+          </div>
+          <hr class="sep">
+          <div class="grid2">
+            <label class="f">Printer language
+              <select id="lang"><option value="zpl">ZPL (BPL-Z)</option><option value="epl">EPL (BPL-E)</option></select>
+            </label>
+            <label class="f">Darkness (0–30)<input type="number" id="dark" min="0" max="30" value="15"></label>
+          </div>
+          <label class="f" id="bleCharRow" style="margin-top:12px" hidden>Bluetooth data channel
+            <select id="bleChar"></select>
+          </label>
+          <label class="f" style="margin-top:12px">Extra Bluetooth service ID (only if your printer isn't found)
+            <input type="text" id="bleUuid" placeholder="e.g. 0000ff00-0000-1000-8000-00805f9b34fb">
+          </label>
+        </div>
+        <div class="panel">
+          <div class="ph"><h2>How to connect</h2></div>
+          <ol class="steps">
+            <li>Use <b>Chrome or Edge</b> on a computer. iPhone browsers can't reach printers, and neither can this page inside the Claude app. Open the downloaded file instead.</li>
+            <li><b>Turn off Bluetooth on the PrepWizard tablet.</b> The printer takes one connection at a time.</li>
+            <li>Click <b>Connect printer</b> at the top and pick <b>PrepWizardBix</b>. After that, the app reconnects on its own when it opens. If it can't, one tap on <b>Connect printer</b> opens the list again.</li>
+            <li><b>To make automatic reconnect work in Edge:</b> go to <code>edge://flags</code>, search for <b>“new permissions backend for Web Bluetooth”</b>, set it to <b>Enabled</b>, and restart Edge. Connect once more after that. In Chrome, use <code>chrome://flags</code> instead.</li>
+            <li>Blank label or nothing printed? Switch the printer language or the Bluetooth data channel above.</li>
+            <li>When you're done, turn the tablet's Bluetooth back on so PrepWizard works again.</li>
+          </ol>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="ph"><h2>Google Sheet item list</h2><p id="sheetState">Not set up</p></div>
+          <p class="muted" style="margin:0 0 10px;font-size:15px">Keep your items in a Google Sheet. Each time the app opens, it checks the sheet and asks before changing your list.</p>
+          <label class="f">Sheet link<input type="text" id="sheetUrl" placeholder="Paste the Google Sheet link"></label>
+          <div class="rowx" style="margin-top:10px">
+            <button class="btn go" id="sheetCheck">Check sheet now</button>
+            <button class="btn" id="prepFileBtn">Import a .csv file</button>
+            <input type="file" id="prepFile" accept=".csv,text/csv" hidden>
+            <button class="btn ghost" id="sheetHelpBtn">How to set up the sheet</button>
+          </div>
+          <ol class="steps" id="sheetHelp" hidden style="margin-top:12px">
+            <li>Make a sheet with these column headers in row 1: <b>Item</b>, <b>Shelf life</b>, and optionally <b>Category</b>.</li>
+            <li>Shelf life is in days (<code>3</code>) or hours (<code>4h</code>). Category is anything you like, such as Prep, Received or Prod.</li>
+            <li>Click <b>Share</b> and set General access to <b>Anyone with the link</b> as <b>Viewer</b>, then copy the link and paste it above.</li>
+            <li>Labels made from the sheet show the item name, the prep time and the use-by date. You can still restyle any of them in Design. Your design is kept, and only its use-by changes if the sheet changes.</li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div class="ph"><h2>Your labels &amp; batches</h2><p id="libStats"></p></div>
+          <p class="muted" style="margin:0 0 12px;font-size:15px">They're kept in this browser on this computer. Clearing browsing data erases them, so keep a backup.</p>
+          <div class="rowx">
+            <button class="btn" id="exportLib">Download backup</button>
+            <button class="btn" id="importLib">Restore from backup</button>
+            <input type="file" id="importFile" accept=".json,application/json" hidden>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h2>Current design as a file</h2></div>
+          <div class="rowx">
+            <button class="btn sm" id="dlPng">Save image (.png)</button>
+            <button class="btn sm" id="dlCode">Save printer code (.txt)</button>
+            <button class="btn sm" id="copyCode">Copy ZPL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- bottom action bar -->
+<div class="bar">
+  <div class="bar-in" id="barPrint">
+    <div class="sum" id="printSum"><strong>Nothing selected</strong>Tap + on a label to add it</div>
+    <button class="btn ghost" id="clearQty" hidden>Clear</button>
+    <button class="printbtn" id="printBatch" disabled>Print</button>
+  </div>
+  <div class="bar-in" id="barDesign" hidden>
+    <div class="sum"><strong id="designSumName">Unsaved label</strong><span id="designSumNote">Print it now or save it to your list</span></div>
+    <div class="stepper" aria-label="Copies">
+      <button id="cMinus" aria-label="Fewer copies">−</button>
+      <input type="number" id="copies" value="1" min="1" max="99" aria-label="Copies">
+      <button id="cPlus" aria-label="More copies">+</button>
+    </div>
+    <button class="printbtn" id="printOne">Print</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="dlgName"><form method="dialog" class="dlg">
+  <h3 id="dlgNameTitle">Save batch</h3>
+  <p id="dlgNameHelp">Give this set of quantities a name so you can load it again.</p>
+  <input type="text" id="dlgNameInput" placeholder="e.g. Morning" autocomplete="off">
+  <div class="rowx"><button class="btn" value="cancel">Cancel</button><button class="btn go" id="dlgNameOk" value="ok">Save</button></div>
+</form></dialog>
+
+<dialog id="dlgSync"><div class="dlg">
+  <h3>Update prep list</h3>
+  <p>Untick anything you don't want to change.</p>
+  <div class="synclist" id="syncList"></div>
+  <div class="rowx"><button class="btn" id="syncCancel">Cancel</button><button class="btn go" id="syncApply">Update list</button></div>
+</div></dialog>
+
+<dialog id="dlgConfirm"><form method="dialog" class="dlg">
+  <h3 id="cfTitle">Delete?</h3>
+  <p id="cfText"></p>
+  <div class="rowx"><button class="btn" value="cancel" autofocus>Cancel</button><button class="btn danger-fill" value="ok" id="cfOk">Delete</button></div>
+</form></dialog>
+
+<dialog id="dlgConn"><div class="dlg">
+  <h3>Connect printer</h3>
+  <p>Turn off Bluetooth on the PrepWizard tablet first.</p>
+  <div class="connopts">
+    <button class="primary" id="dlgBle"><strong>Bluetooth</strong><span>Pick “PrepWizardBix” from the list</span></button>
+    <button id="dlgUsb"><strong>USB cable or COM port</strong><span>For a printer plugged into this computer</span></button>
+  </div>
+  <div class="rowx"><button class="btn" id="dlgConnClose">Cancel</button></div>
+</div></dialog>
+
+<script>
+(() => {
+  "use strict";
+  const DPI = 203, MAX_W = 432;
+  const FONTS = ["Bebas Neue","Inter","Archivo","Oswald","Roboto Slab","Roboto Mono","Pacifico","Lobster","Permanent Marker","Caveat","Special Elite","Arial","Georgia","Courier New","Impact"];
+  const mm2dots = mm => Math.round(mm / 25.4 * DPI);
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const LS = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } },
+  };
+
+  // ---------- day dot (food-safety day colors) ----------
+  const DAY_COLORS = [["SUN","#1B1B1B","#fff"],["MON","#2F6FDB","#fff"],["TUE","#F2C200","#16202A"],["WED","#D7261E","#fff"],["THU","#7A4A2A","#fff"],["FRI","#2E9B47","#fff"],["SAT","#F07D1A","#16202A"]];
+  function paintDay() {
+    const d = new Date(), [ab, bg, fg] = DAY_COLORS[d.getDay()];
+    document.documentElement.style.setProperty("--day", bg);
+    document.documentElement.style.setProperty("--day-ink", fg);
+    $("daydot").textContent = ab;
+    $("todayText").textContent = d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  }
+  paintDay(); setInterval(paintDay, 60000);
+
+  // ---------- toast ----------
+  let toastT = 0;
+  function toast(msg, kind, ms) {
+    const t = $("toast"); t.textContent = msg; t.className = "toast show" + (kind ? " " + kind : "");
+    clearTimeout(toastT); toastT = setTimeout(() => t.className = "toast", ms || (kind === "bad" ? 6000 : 3200));
+  }
+
+  // ---------- tabs ----------
+  const TABS = ["print", "design", "settings"];
+  function showTab() {
+    let t = location.hash.slice(1); if (!TABS.includes(t)) t = "print";
+    for (const n of TABS) $("view-" + n).hidden = n !== t;
+    document.querySelectorAll(".tabs a").forEach(a => { if (a.dataset.tab === t) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    $("barPrint").hidden = t !== "print"; $("barDesign").hidden = t !== "design";
+    if (t === "design") drawPreview();
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", showTab);
+  function go(t) { if (location.hash !== "#" + t) location.hash = t; else showTab(); }
+
+  // ---------- date tokens ----------
+  function expand(t) {
+    // {date+3} days, {date+4h} hours, {time+10m} minutes, {date+9mo} months
+    return String(t).replace(/\{(date|day|time)(?:([+-])(\d+)(mo|h|m)?)?\}/gi, (m, k, sign, n, unit) => {
+      const d = new Date(), dir = sign === "-" ? -1 : 1, v = dir * parseInt(n || 0);
+      if (n) { unit = (unit || "").toLowerCase(); if (unit === "h") d.setHours(d.getHours() + v); else if (unit === "m") d.setMinutes(d.getMinutes() + v); else if (unit === "mo") d.setMonth(d.getMonth() + v); else d.setDate(d.getDate() + v); }
+      k = k.toLowerCase();
+      if (k === "date") return `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)}`;
+      if (k === "day") return d.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase();
+      return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    });
+  }
+
+  // =================================================================
+  // Rendering engine (pure: design -> 1-bit bitmap)
+  // =================================================================
+  const meas = document.createElement("canvas").getContext("2d");
+  const fontStr = it => `${it.italic ? "italic " : ""}${it.bold ? "700 " : "400 "}${it.size}px "${it.font}"`;
+  const dims = d => ({ W: Math.min(mm2dots(d.wmm), MAX_W), H: mm2dots(d.hmm) });
+  // Measure the real ink of each line (script fonts reach above/below the normal text box)
+  function textMetrics(it) {
+    meas.font = fontStr(it); meas.textBaseline = "alphabetic";
+    const lines = expand(it.text).split("\n").map(t => {
+      const m = meas.measureText(t || " ");
+      const left = Math.max(0, m.actualBoundingBoxLeft || 0), right = Math.max(m.width, m.actualBoundingBoxRight || 0);
+      return { t, left, w: Math.ceil(left + right), asc: m.actualBoundingBoxAscent || it.size * 0.8, desc: m.actualBoundingBoxDescent || it.size * 0.2 };
+    });
+    const asc = Math.max(...lines.map(l => l.asc), it.size * 0.7), desc = Math.max(...lines.map(l => l.desc), 0);
+    const adv = it.size * it.lineH;
+    return { lines, asc, desc, adv, w: Math.max(...lines.map(l => l.w)), h: Math.ceil(asc + desc + (lines.length - 1) * adv) + 2 };
+  }
+  function bbox(it) {
+    if (it.type === "image") return { x: it.x, y: it.y, w: it.w, h: Math.round(it.w * it.img.naturalHeight / it.img.naturalWidth) };
+    const m = textMetrics(it);
+    return { x: it.x, y: it.y, w: m.w, h: m.h };
+  }
+  function drawItem(c, it) {
+    if (it.flipH || it.flipV) {
+      const b = bbox(it), cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+      c.save(); c.translate(cx, cy); c.scale(it.flipH ? -1 : 1, it.flipV ? -1 : 1); c.translate(-cx, -cy);
+      drawItemPlain(c, it); c.restore(); return;
+    }
+    drawItemPlain(c, it);
+  }
+  // Shrinking line art normally averages thin lines into light grey, which then vanishes.
+  // For line art we keep the darkest pixel in each patch instead, so every line survives.
+  const poolCache = new WeakMap();
+  function pooledImage(img, w, h) {
+    w = Math.max(1, Math.round(w)); h = Math.max(1, Math.round(h));
+    let m = poolCache.get(img); if (!m) { m = new Map(); poolCache.set(img, m); }
+    const key = w + "x" + h; if (m.has(key)) return m.get(key);
+    const sw = img.naturalWidth, sh = img.naturalHeight, sc = document.createElement("canvas"); sc.width = sw; sc.height = sh;
+    const sx = sc.getContext("2d"); sx.drawImage(img, 0, 0); const sd = sx.getImageData(0, 0, sw, sh).data;
+    const out = document.createElement("canvas"); out.width = w; out.height = h; const ox = out.getContext("2d"), od = ox.createImageData(w, h);
+    for (let y = 0; y < h; y++) {
+      const y0 = Math.floor(y * sh / h), y1 = Math.max(y0 + 1, Math.floor((y + 1) * sh / h));
+      for (let x = 0; x < w; x++) {
+        const x0 = Math.floor(x * sw / w), x1 = Math.max(x0 + 1, Math.floor((x + 1) * sw / w));
+        let lo = 255, amax = 0;
+        for (let yy = y0; yy < y1; yy++) for (let xx = x0; xx < x1; xx++) {
+          const p = (yy * sw + xx) * 4, a = sd[p + 3] / 255; if (a > amax) amax = a;
+          const l = (0.299 * sd[p] + 0.587 * sd[p + 1] + 0.114 * sd[p + 2]) * a + 255 * (1 - a); if (l < lo) lo = l;
+        }
+        const q = (y * w + x) * 4; od.data[q] = od.data[q + 1] = od.data[q + 2] = lo; od.data[q + 3] = amax > 0.05 ? 255 : 0;
+      }
+    }
+    ox.putImageData(od, 0, 0);
+    if (m.size > 6) m.clear(); m.set(key, out); return out;
+  }
+  function drawItemPlain(c, it) {
+    if (it.type === "image" && it.dither === "line") { const b = bbox(it); c.imageSmoothingEnabled = false; c.drawImage(pooledImage(it.img, b.w, b.h), b.x, b.y); c.imageSmoothingEnabled = true; return; }
+    if (it.type === "image") { const b = bbox(it); c.imageSmoothingQuality = "high"; c.drawImage(it.img, b.x, b.y, b.w, b.h); return; }
+    const m = textMetrics(it);
+    c.font = fontStr(it); c.fillStyle = "#000"; c.textBaseline = "alphabetic";
+    m.lines.forEach((l, i) => {
+      let x = it.x; if (it.align === "center") x = it.x + (m.w - l.w) / 2; else if (it.align === "right") x = it.x + m.w - l.w;
+      c.fillText(l.t, x + l.left, it.y + 1 + m.asc + i * m.adv);
+    });
+  }
+  // Shrink (or with grow=true, also enlarge) text so it fits inside the label, then keep it on the label.
+  function fitText(it, grow, design) {
+    if (!it || it.type !== "text") return;
+    const { W, H } = dims(design || D), maxW = W - 16, maxH = H - 8;
+    for (let k = 0; k < 4; k++) {
+      const b = bbox(it), s = Math.min(maxW / b.w, maxH / b.h);
+      if (s >= 1 && !grow) break;
+      const ns = Math.max(6, Math.floor(it.size * Math.min(s, grow ? 4 : 1)));
+      if (ns === it.size) break; it.size = ns;
+    }
+    const b = bbox(it);
+    if (it.align === "center" || b.x < 0 || b.x + b.w > W) it.x = Math.round((W - b.w) / 2);
+    it.y = Math.max(4, Math.min(it.y, H - b.h - 4));
+  }
+  const KERNELS = { fs: [[1,0,7/16],[-1,1,3/16],[0,1,5/16],[1,1,1/16]], atkinson: [[1,0,1/8],[2,0,1/8],[-1,1,1/8],[0,1,1/8],[1,1,1/8],[0,2,1/8]] };
+  const tmp = document.createElement("canvas"), tctx = tmp.getContext("2d", { willReadFrequently: true });
+  function renderMono(d) {
+    const { W, H } = dims(d); tmp.width = W; tmp.height = H;
+    const mono = new Uint8Array(W * H);
+    for (const it of d.items) {
+      tctx.clearRect(0, 0, W, H); drawItem(tctx, it);
+      const b = bbox(it);
+      const x0 = Math.max(0, Math.floor(b.x)), y0 = Math.max(0, Math.floor(b.y));
+      const x1 = Math.min(W, Math.ceil(b.x + b.w)), y1 = Math.min(H, Math.ceil(b.y + b.h));
+      if (x1 <= x0 || y1 <= y0) continue;
+      const data = tctx.getImageData(0, 0, W, H).data;
+      if (it.type === "text") {
+        for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+          const i = y * W + x, a = data[i * 4 + 3];
+          if (it.invert) mono[i] = a > 127 ? 0 : 1; else if (a > 127) mono[i] = 1;
+        }
+      } else {
+        const g = new Float32Array(W * H), al = new Uint8Array(W * H);
+        const c = it.contrast / 100, cf = (1 + c) / (1 - Math.min(c, 0.99));
+        for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+          const i = y * W + x, p = i * 4, a = data[p + 3] / 255;
+          let lum = 0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+          lum = lum * a + 255 * (1 - a);
+          if (it.lo != null && it.hi > it.lo) lum = (lum - it.lo) * 255 / (it.hi - it.lo); // auto levels for photos
+          lum = (lum - 128) * cf + 128;
+          let dk = 255 - Math.max(0, Math.min(255, lum)); if (it.invert) dk = 255 - dk;
+          g[i] = dk; al[i] = data[p + 3];
+        }
+        const k = KERNELS[it.dither], thr = 255 - it.threshold;
+        for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+          const i = y * W + x, old = g[i], nv = old >= thr ? 255 : 0; g[i] = nv;
+          if (k) { const e = old - nv; for (const [dx, dy, f] of k) { const xx = x + dx, yy = y + dy; if (xx >= x0 && xx < x1 && yy < y1) g[yy * W + xx] += e * f; } }
+        }
+        for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = y * W + x; if (al[i] === 0 && !it.invert) continue; mono[i] = g[i] > 127 ? 1 : 0; }
+      }
+    }
+    if (d.border) for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (x < 4 || y < 4 || x >= W - 4 || y >= H - 4) mono[y * W + x] = 1;
+    if (d.invertAll) for (let i = 0; i < mono.length; i++) mono[i] ^= 1;
+    return { W, H, mono };
+  }
+  function monoToCanvas(r, canvas) {
+    const c = canvas || document.createElement("canvas"); c.width = r.W; c.height = r.H;
+    const x = c.getContext("2d"), img = x.createImageData(r.W, r.H);
+    for (let i = 0; i < r.mono.length; i++) { const v = r.mono[i] ? 20 : 255, p = i * 4; img.data[p] = img.data[p + 1] = img.data[p + 2] = v; img.data[p + 3] = 255; }
+    x.putImageData(img, 0, 0); return c;
+  }
+
+  // ---------- printer code ----------
+  const enc = new TextEncoder();
+  function buildJob(r, copies) {
+    const { W, H, mono } = r, bpr = Math.ceil(W / 8), lang = $("lang").value;
+    const bytes = new Uint8Array(bpr * H), blackIsOne = lang === "zpl";
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ((mono[y * W + x] === 1) === blackIsOne) bytes[y * bpr + (x >> 3)] |= 0x80 >> (x & 7);
+    if (!blackIsOne) { const pad = bpr * 8 - W; if (pad) for (let y = 0; y < H; y++) bytes[y * bpr + bpr - 1] |= (1 << pad) - 1; }
+    copies = Math.max(1, copies | 0);
+    if (lang === "zpl") {
+      let hex = ""; for (const b of bytes) hex += (b < 16 ? "0" : "") + b.toString(16).toUpperCase();
+      const dark = Math.max(0, Math.min(30, parseInt($("dark").value) || 15));
+      const txt = `^XA\n^PW${W}\n^LL${H}\n^LH0,0\n~SD${String(dark).padStart(2, "0")}\n^FO0,0^GFA,${bytes.length},${bytes.length},${bpr},${hex}^FS\n^PQ${copies}\n^XZ\n`;
+      return { text: txt, bytes: enc.encode(txt) };
+    }
+    const head = enc.encode(`\nN\nq${W}\nQ${H},24\nGW0,0,${bpr},${H},`), tail = enc.encode(`\nP${copies}\n`);
+    const all = new Uint8Array(head.length + bytes.length + tail.length);
+    all.set(head); all.set(bytes, head.length); all.set(tail, head.length + bytes.length);
+    return { text: null, bytes: all };
+  }
+
+  // =================================================================
+  // Design state + editor
+  // =================================================================
+  let nextId = 1;
+  const D = { wmm: 50.8, hmm: 25.4, border: false, invertAll: false, items: [] };
+  let sel = -1, editingId = null, dirty = false;
+  const cv = $("preview"), pctx = cv.getContext("2d");
+
+  function newText(text, o) { return Object.assign({ id: nextId++, type: "text", text, font: "Inter", size: 32, bold: false, italic: false, align: "center", lineH: 1.1, x: 0, y: 0, invert: false }, o); }
+  function centerH(it) { const { W } = dims(D); it.x = Math.round((W - bbox(it).w) / 2); }
+  function centerV(it) { const { H } = dims(D); it.y = Math.round((H - bbox(it).h) / 2); }
+  function markDirty() { dirty = true; updateDesignBar(); }
+  // selection: `sel` is the main item; selItems holds everything highlighted (Shift/Ctrl-click, drag a box, Ctrl+A)
+  let selItems = new Set();
+  function syncSel() {
+    for (const x of [...selItems]) if (!D.items.includes(x)) selItems.delete(x);
+    const p = D.items[sel];
+    if (!p) { sel = -1; if (selItems.size) sel = D.items.findIndex(x => selItems.has(x)); }
+    else if (!selItems.has(p)) selItems = new Set([p]);
+  }
+  const selected = () => { syncSel(); return D.items.filter(x => selItems.has(x)); };
+  const isMulti = () => selected().length > 1;
+  // change text but keep it anchored the way it's aligned (centered text stays centered)
+  function keepAnchor(it, fn) {
+    if (!it || it.type !== "text") { fn(); return; }
+    const b0 = bbox(it); fn(); const b1 = bbox(it);
+    if (it.align === "center") it.x = Math.round(b0.x + b0.w / 2 - b1.w / 2);
+    else if (it.align === "right") it.x = Math.round(b0.x + b0.w - b1.w);
+  }
+
+  // "Add text" reuses the font and size of the last text you made or styled
+  let lastStyle = (() => { try { return JSON.parse(LS.get("labelstudio.lastTextStyle", "null")); } catch { return null; } })()
+    || { font: "Inter", size: 32, bold: false, italic: false, align: "center", lineH: 1.1 };
+  function rememberStyle(it) {
+    if (!it || it.type !== "text") return;
+    lastStyle = { font: it.font, size: it.size, bold: !!it.bold, italic: !!it.italic, align: it.align, lineH: it.lineH };
+    LS.set("labelstudio.lastTextStyle", JSON.stringify(lastStyle));
+  }
+
+  let raf = 0;
+  function drawPreview() {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const r = renderMono(D); monoToCanvas(r, cv);
+      if (!ieOpen) {
+        pctx.save(); pctx.strokeStyle = "#1E4FD6"; pctx.lineWidth = 2; pctx.setLineDash([6, 4]);
+        const list = selected();
+        for (const x of list) { const b = bbox(x); pctx.strokeRect(b.x - 3, b.y - 3, b.w + 6, b.h + 6); }
+        if (list.length === 1) {
+          pctx.setLineDash([]); pctx.lineWidth = Math.max(1.5, 1.5 / dispScale());
+          for (const h of handlesFor(list[0])) {
+            pctx.fillStyle = "#fff"; pctx.strokeStyle = "#1E4FD6";
+            pctx.beginPath(); pctx.roundRect ? pctx.roundRect(h.x - h.w / 2, h.y - h.h / 2, h.w, h.h, Math.min(h.w, h.h) / 2) : pctx.rect(h.x - h.w / 2, h.y - h.h / 2, h.w, h.h);
+            pctx.fill(); pctx.stroke();
+          }
+        }
+        pctx.restore();
+      }
+      if (guides) {
+        // crosshair through the middle of the label; turns solid pink when the item is centered on it
+        const { W, H } = dims(D), cx = Math.floor(W / 2) + .5, cy = Math.floor(H / 2) + .5;
+        pctx.save(); pctx.lineWidth = 1;
+        for (const [on, x0, y0, x1, y1] of [[guides.v, cx, 0, cx, H], [guides.h, 0, cy, W, cy]]) {
+          pctx.strokeStyle = on ? "#E8338A" : "rgba(232,51,138,.55)"; pctx.setLineDash(on ? [] : [4, 4]);
+          pctx.beginPath(); pctx.moveTo(x0, y0); pctx.lineTo(x1, y1); pctx.stroke();
+        }
+        pctx.restore();
+      }
+      if (marquee) {
+        pctx.save(); pctx.fillStyle = "rgba(30,79,214,.12)"; pctx.strokeStyle = "#1E4FD6"; pctx.lineWidth = 1.5; pctx.setLineDash([]);
+        const m = normRect(marquee); pctx.fillRect(m.x, m.y, m.w, m.h); pctx.strokeRect(m.x, m.y, m.w, m.h); pctx.restore();
+      }
+      cv.style.width = Math.min(r.W * 1.9, 760) + "px";
+      $("dims").textContent = `${r.W} × ${r.H} dots (${(r.W / DPI * 25.4).toFixed(1)} × ${D.hmm} mm)` + (mm2dots(D.wmm) > MAX_W ? ", clipped to the 54 mm print width" : "");
+      positionInline();
+    });
+  }
+  async function fontsReady(items) {
+    const f = new Set(items.filter(i => i.type === "text").map(fontStr));
+    try { await Promise.all([...f].map(x => document.fonts.load(x))); } catch {}
+  }
+  async function refresh() { await fontsReady(D.items); drawPreview(); }
+
+  // ---------- "On this label" list ----------
+  const TRASH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-3 6h12l-1 12H7L6 9Zm4 2v8h2v-8h-2Zm4 0v8h2v-8h-2Z"/></svg>';
+  let layerDrag = null;
+  const layerName = it => it.label || (it.type === "text" ? (it.text.replace(/\n/g, " / ") || "(empty)") : it.name);
+  // double-click a layer to rename it (Enter saves, Esc cancels, empty goes back to the default name)
+  function renameLayer(it) {
+    const row = [...$("items").querySelectorAll(".layer")].find(r => r.__item === it); if (!row) return;
+    const lt = row.querySelector(".lt"), inp = document.createElement("input");
+    inp.type = "text"; inp.className = "lrename"; inp.value = layerName(it); inp.setAttribute("aria-label", "Layer name");
+    row.draggable = false; lt.replaceWith(inp); inp.focus(); inp.select();
+    let done = false;
+    const finish = save => {
+      if (done) return; done = true;
+      if (save) { const v = inp.value.trim(), dflt = it.type === "text" ? it.text.replace(/\n/g, " / ") : it.name; if (!v || v === dflt) delete it.label; else it.label = v; markDirty(); }
+      renderItems(); renderEditor();
+    };
+    inp.onkeydown = e => { e.stopPropagation(); if (e.key === "Enter") finish(true); else if (e.key === "Escape") finish(false); };
+    inp.onblur = () => finish(true);
+    inp.onclick = e => e.stopPropagation(); inp.ondblclick = e => e.stopPropagation();
+  }
+  function renderItems() {
+    syncSel();
+    const el = $("items"); el.innerHTML = "";
+    const n = selected().length, texts = D.items.filter(x => x.type === "text").length;
+    $("selAllText").hidden = texts < 2; $("selInfo").textContent = n > 1 ? `${n} selected` : "";
+    if (!D.items.length) { el.innerHTML = '<p class="muted layers-empty">Nothing here yet. Type a name above, or use Add text.</p>'; return; }
+    // top of the list is the front-most layer, like Photoshop
+    [...D.items].reverse().forEach(it => {
+      const i = D.items.indexOf(it);
+      const row = document.createElement("div"); row.className = "layer" + (selItems.has(it) ? " sel" : "");
+      row.__item = it; row.draggable = true;
+      row.ondragstart = e => { layerDrag = it; row.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", ""); } catch {} };
+      row.ondragend = () => { layerDrag = null; el.querySelectorAll(".layer").forEach(r => r.classList.remove("drop-above", "drop-below", "dragging")); };
+      row.ondragover = e => {
+        if (!layerDrag || layerDrag === it) return; e.preventDefault();
+        const r = row.getBoundingClientRect(), above = e.clientY < r.top + r.height / 2;
+        row.classList.toggle("drop-above", above); row.classList.toggle("drop-below", !above);
+      };
+      row.ondragleave = () => row.classList.remove("drop-above", "drop-below");
+      row.ondrop = e => {
+        e.preventDefault(); if (!layerDrag || layerDrag === it) return;
+        const r = row.getBoundingClientRect(), above = e.clientY < r.top + r.height / 2;
+        const disp = [...D.items].reverse().filter(x => x !== layerDrag);
+        let pos = disp.indexOf(it) + (above ? 0 : 1); disp.splice(pos, 0, layerDrag);
+        D.items = disp.reverse(); sel = D.items.indexOf(layerDrag); layerDrag = null;
+        markDirty(); renderItems(); renderEditor(); drawPreview();
+      };
+      row.innerHTML = `<button type="button" class="lsel"><span class="k">${it.type === "text" ? "Text" : "Image"}</span><span class="lt"></span></button><button type="button" class="ldel" aria-label="Delete">${TRASH}</button>`;
+      const lt = row.querySelector(".lt");
+      lt.textContent = layerName(it);
+      if (it.type === "text") lt.style.fontFamily = `'${it.font}', system-ui`;
+      row.querySelector(".lsel").onclick = e => selectItem(i, e.shiftKey || e.ctrlKey || e.metaKey);
+      row.querySelector(".lsel").ondblclick = e => { e.preventDefault(); selectItem(i); renameLayer(it); };
+      row.querySelector(".ldel").onclick = () => removeItem(i);
+      el.appendChild(row);
+    });
+  }
+  // additive = Shift/Ctrl/Cmd held: add or remove from the highlighted set
+  function selectItem(i, additive) {
+    closeInline(); syncSel();
+    const it = D.items[i];
+    if (!it) { sel = -1; selItems = new Set(); }
+    else if (additive) {
+      if (selItems.has(it) && selItems.size > 1) { selItems.delete(it); if (D.items[sel] === it) sel = D.items.findIndex(x => selItems.has(x)); }
+      else { selItems.add(it); sel = i; }
+    } else { sel = i; selItems = new Set([it]); }
+    renderItems(); renderEditor(); drawPreview();
+  }
+  function selectMany(list) {
+    closeInline(); selItems = new Set(list); sel = list.length ? D.items.indexOf(list[list.length - 1]) : -1;
+    renderItems(); renderEditor(); drawPreview();
+  }
+  function removeItem(i) {
+    closeInline(); if (i < 0 || i >= D.items.length) return;
+    D.items.splice(i, 1); sel = -1; selItems = new Set(); markDirty(); renderItems(); renderEditor(); drawPreview();
+  }
+  function removeSelected() {
+    const list = selected(); if (!list.length) return;
+    closeInline(); D.items = D.items.filter(x => !selItems.has(x)); sel = -1; selItems = new Set();
+    markDirty(); renderItems(); renderEditor(); drawPreview();
+  }
+
+  // ---------- contextual toolbar ----------
+  const IC = {
+    left: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg>',
+    center: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg>',
+    right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg>',
+    format: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 16l4-9 4 9M9.5 13h5"/></svg>',
+    size: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M4 4l6 6M20 15v5h-5M20 20l-6-6"/></svg>',
+    flip: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3v18"/><path d="M9 7 3 18h6V7Z"/><path d="m15 7 6 11h-6V7Z" stroke-dasharray="2 2"/></svg>',
+    arrange: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="12" height="12" rx="1.5"/><rect x="9" y="9" width="12" height="12" rx="1.5" fill="currentColor" fill-opacity=".15"/></svg>',
+    chev: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>',
+  };
+  const pop = (label, icon, inner) => `<div class="tb-pop"><button type="button" class="tb-btn" aria-expanded="false" aria-haspopup="true">${icon}<span>${label}</span></button><div class="popover" hidden>${inner}</div></div>`;
+  // nudge a menu sideways so it never runs off the screen
+  function keepOnScreen(pv) {
+    pv.style.transform = ""; const r = pv.getBoundingClientRect(); let shift = 0;
+    if (r.left < 8) shift = 8 - r.left; else if (r.right > innerWidth - 8) shift = innerWidth - 8 - r.right;
+    if (shift) pv.style.transform = `translateX(calc(-50% + ${shift}px))`;
+  }
+  function closePops(except) {
+    document.querySelectorAll(".tb-pop .popover").forEach(p => { if (p !== except) { p.hidden = true; p.previousElementSibling.setAttribute("aria-expanded", "false"); } });
+  }
+  document.addEventListener("pointerdown", e => { if (!e.target.closest(".tb-pop")) closePops(); }, true);
+
+  function sizePop(it) {
+    return `<div class="pair"><label class="f">Left<input type="number" data-k="x" value="${Math.round(it.x)}"></label><label class="f">Top<input type="number" data-k="y" value="${Math.round(it.y)}"></label></div>
+      ${it.type === "image" ? `<label class="f">Width (dots)<input type="number" data-k="w" value="${it.w}" min="8" max="2000"></label><button class="btn sm" data-act="fit">Fit to label width</button>`
+        : `<button class="btn sm" data-act="fittext">Fit to label width</button>`}
+      <div class="pair"><button class="btn sm" data-act="ch">Center across</button><button class="btn sm" data-act="cv">Center up-down</button></div>`;
+  }
+  const flipPop = it => `<button class="btn sm" data-act="flipH">${it.flipH ? "✓ " : ""}Flip horizontal</button><button class="btn sm" data-act="flipV">${it.flipV ? "✓ " : ""}Flip vertical</button>`;
+  const arrangePop = () => `<button class="btn sm" data-act="front">Bring to front (top layer)</button><button class="btn sm" data-act="up">Bring forward</button><button class="btn sm" data-act="down">Send backward</button><button class="btn sm" data-act="back">Send to back (bottom layer)</button><hr class="sep"><button class="btn sm" data-act="dup">Duplicate</button><button class="btn sm danger" data-act="del">Delete</button>`;
+
+  function renderEditor() {
+    syncSel();
+    if (isMulti()) return renderGroupBar();
+    const ed = $("editor"), it = D.items[sel];
+    if (!it) {
+      const presets = [["50.8x25.4", '2" × 1"'], ["50.8x50.8", '2" × 2"'], ["50.8x76.2", '2" × 3"'], ["50.8x101.6", '2" × 4"'], ["50x30", "50 × 30 mm"]];
+      const key = `${D.wmm}x${D.hmm}`, known = presets.some(p => p[0] === key);
+      ed.innerHTML = `<span class="tb-label">Label</span>
+        <select id="preset" aria-label="Label size">${presets.map(p => `<option value="${p[0]}" ${p[0] === key ? "selected" : ""}>${p[1]}</option>`).join("")}<option value="custom" ${known ? "" : "selected"}>Custom</option></select>
+        <label class="tb-mini">W<input type="number" id="wmm" step="0.1" min="10" max="54" value="${D.wmm}"></label>
+        <label class="tb-mini">H<input type="number" id="hmm" step="0.1" min="5" max="300" value="${D.hmm}"></label><span class="tb-mini">mm</span>
+        <span class="tb-sep"></span>
+        <label class="tb-chk"><input type="checkbox" id="border" ${D.border ? "checked" : ""}> Border</label>
+        <label class="tb-chk"><input type="checkbox" id="invertAll" ${D.invertAll ? "checked" : ""}> Invert</label>`;
+      $("preset").onchange = () => { const v = $("preset").value; if (v === "custom") return; [D.wmm, D.hmm] = v.split("x").map(Number); $("wmm").value = D.wmm; $("hmm").value = D.hmm; fitAllToLabel(); markDirty(); drawPreview(); };
+      $("wmm").onchange = () => { fitAllToLabel(); drawPreview(); };
+      $("hmm").onchange = () => { fitAllToLabel(); drawPreview(); };
+      $("wmm").oninput = () => { D.wmm = parseFloat($("wmm").value) || 50.8; $("preset").value = "custom"; markDirty(); drawPreview(); };
+      $("hmm").oninput = () => { D.hmm = parseFloat($("hmm").value) || 25.4; $("preset").value = "custom"; markDirty(); drawPreview(); };
+      $("border").onchange = e => { D.border = e.target.checked; markDirty(); drawPreview(); };
+      $("invertAll").onchange = e => { D.invertAll = e.target.checked; markDirty(); drawPreview(); };
+      return;
+    }
+    if (it.type === "text") {
+      const opts = FONTS.map(n => `<button type="button" role="option" aria-selected="${n === it.font}" data-font="${esc(n)}" style="font-family:'${esc(n)}'">${esc(n)}</button>`).join("");
+      const style = it.bold && it.italic ? "bi" : it.bold ? "b" : it.italic ? "i" : "r";
+      ed.innerHTML = `
+        <div class="fontpick tb-font"><button type="button" class="fp-btn" aria-haspopup="listbox" aria-expanded="false" title="Font" style="font-family:'${esc(it.font)}'"><span>${esc(it.font)}</span>${IC.chev}</button><div class="fp-list" role="listbox" aria-label="Font" hidden>${opts}</div></div>
+        <input type="number" class="tb-size" data-k="size" value="${it.size}" min="6" max="600" title="Size" aria-label="Size">
+        <select data-style title="Style" aria-label="Style"><option value="r" ${style === "r" ? "selected" : ""}>Regular</option><option value="b" ${style === "b" ? "selected" : ""}>Bold</option><option value="i" ${style === "i" ? "selected" : ""}>Italic</option><option value="bi" ${style === "bi" ? "selected" : ""}>Bold italic</option></select>
+        <button type="button" class="tb-btn" data-act="align" title="Alignment: ${it.align}" aria-label="Alignment: ${it.align}">${IC[it.align] || IC.center}</button>
+        <span class="tb-sep"></span>
+        ${pop("Format", IC.format, `
+          <label class="f"><span class="range-l">Line spacing <span>${it.lineH.toFixed(2)}</span></span><input type="range" data-k="lineH" min="0.8" max="2" step="0.05" value="${it.lineH}"></label>
+          <label class="chk"><input type="checkbox" data-k="invert" ${it.invert ? "checked" : ""}> White on black</label>
+          <hr class="sep"><h4>Insert automatic</h4>
+          <div class="pair"><button class="btn sm" data-tok="{time}">Time</button><button class="btn sm" data-tok="{day}">Day</button></div>
+          <hr class="sep"><button class="btn sm" data-act="upfont">Upload a font…</button>`)}
+        ${pop("Size", IC.size, sizePop(it))}
+        ${pop("Flip", IC.flip, flipPop(it))}
+        ${pop("Arrange", IC.arrange, arrangePop())}`;
+    } else {
+      ed.innerHTML = `<span class="tb-name" title="${esc(layerName(it))}">${esc(layerName(it))}</span>
+        <select data-k="dither" title="Shading" aria-label="Shading"><option value="atkinson" ${it.dither === "atkinson" ? "selected" : ""}>Photo (dots, crisp)</option><option value="fs" ${it.dither === "fs" ? "selected" : ""}>Photo (dots, smooth)</option><option value="line" ${it.dither === "line" ? "selected" : ""}>Line art (keep thin lines)</option><option value="threshold" ${it.dither === "threshold" ? "selected" : ""}>Logo (solid)</option></select>
+        <span class="tb-sep"></span>
+        ${pop("Format", IC.format, `
+          <label class="f"><span class="range-l">Darkness cut-off <span>${it.threshold}</span></span><input type="range" data-k="threshold" min="1" max="254" value="${it.threshold}"></label>
+          <label class="f"><span class="range-l">Contrast <span>${it.contrast}</span></span><input type="range" data-k="contrast" min="-80" max="80" value="${it.contrast}"></label>
+          <label class="chk"><input type="checkbox" data-k="invert" ${it.invert ? "checked" : ""}> Invert</label>`)}
+        ${pop("Size", IC.size, sizePop(it))}
+        ${pop("Flip", IC.flip, flipPop(it))}
+        ${pop("Arrange", IC.arrange, arrangePop())}`;
+    }
+    // popovers
+    ed.querySelectorAll(".tb-pop").forEach(p => {
+      const btn = p.querySelector(".tb-btn"), pv = p.querySelector(".popover");
+      btn.onclick = () => { const open = pv.hidden; closePops(); pv.hidden = !open; btn.setAttribute("aria-expanded", String(open)); if (open) keepOnScreen(pv); };
+      pv.addEventListener("keydown", e => { if (e.key === "Escape") { pv.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.focus(); } });
+    });
+    // value fields
+    ed.querySelectorAll("[data-k]").forEach(inp => {
+      const k = inp.dataset.k;
+      const evn = inp.tagName === "SELECT" || inp.type === "checkbox" ? "change" : "input";
+      inp.addEventListener(evn, () => {
+        let v = inp.type === "checkbox" ? inp.checked : inp.value;
+        if (inp.type === "number" || inp.type === "range") v = parseFloat(v) || 0;
+        if (k === "size") v = Math.max(6, Math.min(600, v));
+        if (k === "size" || k === "lineH") keepAnchor(it, () => { it[k] = v; }); else it[k] = v;
+        markDirty();
+        if (inp.type === "range") inp.closest("label").querySelector(".range-l span").textContent = k === "lineH" ? v.toFixed(2) : v;
+        if (k === "size" || k === "lineH") rememberStyle(it);
+        if (k === "size") refresh(); else drawPreview();
+      });
+    });
+    const st = ed.querySelector("[data-style]");
+    if (st) st.onchange = () => { keepAnchor(it, () => { it.bold = st.value.includes("b"); it.italic = st.value.includes("i"); }); markDirty(); rememberStyle(it); fontsReady([it]).then(() => { fitText(it); renderEditor(); drawPreview(); }); };
+    // font list (each name in its own font)
+    const fp = ed.querySelector(".fontpick");
+    if (fp) {
+      const btn = fp.querySelector(".fp-btn"), list = fp.querySelector(".fp-list"), opts = [...list.querySelectorAll("[data-font]")];
+      const close = () => { list.hidden = true; btn.setAttribute("aria-expanded", "false"); document.removeEventListener("pointerdown", outside, true); };
+      const outside = e => { if (!fp.contains(e.target)) close(); };
+      const open = () => {
+        closePops(); list.hidden = false; btn.setAttribute("aria-expanded", "true");
+        const cur = opts.find(o => o.dataset.font === it.font) || opts[0]; cur.focus(); cur.scrollIntoView({ block: "nearest" });
+        document.addEventListener("pointerdown", outside, true);
+      };
+      const choose = name => {
+        close(); markDirty();
+        fontsReady([{ ...it, font: name }]).then(() => { keepAnchor(it, () => { it.font = name; }); fitText(it); rememberStyle(it); renderEditor(); renderItems(); drawPreview(); $("editor").querySelector(".fp-btn")?.focus(); });
+      };
+      btn.onclick = () => list.hidden ? open() : close();
+      btn.onkeydown = e => { if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); open(); } };
+      opts.forEach((o, i) => {
+        o.onclick = () => choose(o.dataset.font);
+        o.onkeydown = e => {
+          if (e.key === "ArrowDown") { e.preventDefault(); opts[Math.min(i + 1, opts.length - 1)].focus(); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); opts[Math.max(i - 1, 0)].focus(); }
+          else if (e.key === "Escape") { e.preventDefault(); close(); btn.focus(); }
+          else if (e.key === "Tab") close();
+        };
+      });
+    }
+    ed.querySelectorAll("[data-tok]").forEach(b => b.onclick = () => { closePops(); insertToken(b.dataset.tok); });
+    ed.querySelectorAll("[data-act]").forEach(b => b.onclick = () => doAct(b.dataset.act));
+  }
+
+  // toolbar when several things are highlighted: changes apply to every highlighted text
+  function renderGroupBar() {
+    const ed = $("editor"), list = selected(), texts = list.filter(x => x.type === "text");
+    const same = k => texts.length && texts.every(t => t[k] === texts[0][k]) ? texts[0][k] : null;
+    const font = same("font"), size = same("size"), align = same("align") || "center";
+    const b = same("bold"), i = same("italic"), style = b === null || i === null ? "" : b && i ? "bi" : b ? "b" : i ? "i" : "r";
+    const opts = FONTS.map(n => `<button type="button" role="option" aria-selected="${n === font}" data-font="${esc(n)}" style="font-family:'${esc(n)}'">${esc(n)}</button>`).join("");
+    ed.innerHTML = `<span class="tb-count">${list.length} selected</span>
+      ${texts.length ? `
+      <div class="fontpick tb-font"><button type="button" class="fp-btn" aria-haspopup="listbox" aria-expanded="false" title="Font" style="font-family:'${esc(font || "Inter")}'"><span>${esc(font || "Mixed fonts")}</span>${IC.chev}</button><div class="fp-list" role="listbox" aria-label="Font" hidden>${opts}</div></div>
+      <input type="number" class="tb-size" data-gk="size" value="${size ?? ""}" placeholder="—" min="6" max="600" title="Size" aria-label="Size">
+      <select data-gstyle title="Style" aria-label="Style">${style ? "" : '<option value="" selected>Mixed</option>'}<option value="r" ${style === "r" ? "selected" : ""}>Regular</option><option value="b" ${style === "b" ? "selected" : ""}>Bold</option><option value="i" ${style === "i" ? "selected" : ""}>Italic</option><option value="bi" ${style === "bi" ? "selected" : ""}>Bold italic</option></select>
+      <button type="button" class="tb-btn" data-gact="align" title="Alignment" aria-label="Alignment">${IC[align] || IC.center}</button>
+      <span class="tb-sep"></span>
+      ${pop("Format", IC.format, `<label class="chk"><input type="checkbox" data-gk="invert" ${texts.every(t => t.invert) ? "checked" : ""}> White on black</label><button class="btn sm" data-gact="fit">Shrink each to fit the label</button>`)}` : ""}
+      ${pop("Arrange", IC.arrange, `<button class="btn sm" data-gact="ch">Center each across</button><button class="btn sm" data-gact="stack">Stack evenly top to bottom</button><hr class="sep"><button class="btn sm" data-gact="dup">Duplicate</button><button class="btn sm danger" data-gact="del">Delete ${list.length}</button>`)}`;
+    const each = fn => { for (const t of texts) keepAnchor(t, () => fn(t)); };
+    const after = () => fontsReady(texts).then(() => { texts.forEach(t => { if (bbox(t).w > dims(D).W) fitText(t); }); markDirty(); renderItems(); renderEditor(); drawPreview(); });
+    ed.querySelectorAll(".tb-pop").forEach(p => {
+      const btn = p.querySelector(".tb-btn"), pv = p.querySelector(".popover");
+      btn.onclick = () => { const open = pv.hidden; closePops(); pv.hidden = !open; btn.setAttribute("aria-expanded", String(open)); if (open) keepOnScreen(pv); };
+    });
+    const sz = ed.querySelector('[data-gk="size"]');
+    if (sz) sz.oninput = () => { const v = Math.max(6, Math.min(600, parseFloat(sz.value) || 0)); if (!v) return; each(t => { t.size = v; }); rememberStyle(texts[0]); markDirty(); fontsReady(texts).then(drawPreview); };
+    const inv = ed.querySelector('[data-gk="invert"]');
+    if (inv) inv.onchange = () => { texts.forEach(t => { t.invert = inv.checked; }); markDirty(); drawPreview(); };
+    const st = ed.querySelector("[data-gstyle]");
+    if (st) st.onchange = () => { if (!st.value) return; each(t => { t.bold = st.value.includes("b"); t.italic = st.value.includes("i"); }); rememberStyle(texts[0]); after(); };
+    const fp = ed.querySelector(".fontpick");
+    if (fp) {
+      const btn = fp.querySelector(".fp-btn"), lst = fp.querySelector(".fp-list"), opts = [...lst.querySelectorAll("[data-font]")];
+      const close = () => { lst.hidden = true; btn.setAttribute("aria-expanded", "false"); document.removeEventListener("pointerdown", outside, true); };
+      const outside = e => { if (!fp.contains(e.target)) close(); };
+      btn.onclick = () => { if (!lst.hidden) return close(); closePops(); lst.hidden = false; btn.setAttribute("aria-expanded", "true"); (opts.find(o => o.dataset.font === font) || opts[0]).focus(); document.addEventListener("pointerdown", outside, true); };
+      opts.forEach((o, k) => {
+        o.onclick = () => { close(); const name = o.dataset.font; fontsReady(texts.map(t => ({ ...t, font: name }))).then(() => { each(t => { t.font = name; }); rememberStyle(texts[0]); after(); }); };
+        o.onkeydown = e => { if (e.key === "ArrowDown") { e.preventDefault(); opts[Math.min(k + 1, opts.length - 1)].focus(); } else if (e.key === "ArrowUp") { e.preventDefault(); opts[Math.max(k - 1, 0)].focus(); } else if (e.key === "Escape") { close(); btn.focus(); } };
+      });
+    }
+    ed.querySelectorAll("[data-gact]").forEach(btn => btn.onclick = () => {
+      const a = btn.dataset.gact; closePops();
+      if (a === "align") { const nx = { left: "center", center: "right", right: "left" }[align] || "center"; texts.forEach(t => { t.align = nx; }); }
+      if (a === "fit") texts.forEach(t => fitText(t));
+      if (a === "ch") list.forEach(centerH);
+      if (a === "stack") {
+        const { H } = dims(D), sorted = [...list].sort((p, q) => p.y - q.y), total = sorted.reduce((s, x) => s + bbox(x).h, 0);
+        const gap = Math.max(0, (H - 8 - total) / (sorted.length + 1)); let y = 4 + gap;
+        for (const x of sorted) { x.y = Math.round(y); y += bbox(x).h + gap; }
+      }
+      if (a === "dup") { const copies = list.map(x => Object.assign({}, x, { id: nextId++, x: x.x + 10, y: x.y + 10, auto: undefined })); D.items.push(...copies); markDirty(); return selectMany(copies); }
+      if (a === "del") return removeSelected();
+      markDirty(); renderItems(); renderEditor(); drawPreview();
+    });
+  }
+
+  // after the label size changes, shrink anything that no longer fits and pull it back onto the label
+  function fitAllToLabel() {
+    const { W, H } = dims(D);
+    for (const it of D.items) {
+      if (it.type === "image") {
+        const b = bbox(it), k = Math.min(1, (W - 8) / b.w, (H - 8) / b.h);
+        if (k < 1) it.w = Math.max(8, Math.floor(it.w * k));
+      } else fitText(it);
+      const b = bbox(it);
+      it.x = Math.round(Math.max(0, Math.min(it.x, W - b.w))); it.y = Math.round(Math.max(0, Math.min(it.y, H - b.h)));
+    }
+  }
+
+  function doAct(a) {
+    const it = D.items[sel]; if (!it) return;
+    const i = sel, last = D.items.length - 1;
+    if (a === "upfont") { closePops(); return $("fontFile").click(); }
+    if (a === "align") { it.align = { left: "center", center: "right", right: "left" }[it.align] || "center"; rememberStyle(it); }
+    if (a === "ch") centerH(it);
+    if (a === "cv") centerV(it);
+    if (a === "fit") { it.w = dims(D).W; it.x = 0; }
+    if (a === "fittext") fitText(it, true);
+    if (a === "flipH") it.flipH = !it.flipH;
+    if (a === "flipV") it.flipV = !it.flipV;
+    if (a === "del") return removeItem(i);
+    if (a === "dup") { D.items.push(Object.assign({}, it, { id: nextId++, x: it.x + 10, y: it.y + 10, auto: undefined })); sel = D.items.length - 1; }
+    if (a === "up" && i < last) { D.items.splice(i, 1); D.items.splice(i + 1, 0, it); sel = i + 1; }
+    if (a === "down" && i > 0) { D.items.splice(i, 1); D.items.splice(i - 1, 0, it); sel = i - 1; }
+    if (a === "front") { D.items.splice(i, 1); D.items.push(it); sel = D.items.length - 1; }
+    if (a === "back") { D.items.splice(i, 1); D.items.unshift(it); sel = 0; }
+    markDirty(); closePops(); renderItems(); renderEditor(); drawPreview();
+  }
+  function syncXY() {
+    const it = D.items[sel]; if (!it) return;
+    const x = $("editor").querySelector('[data-k="x"]'), y = $("editor").querySelector('[data-k="y"]');
+    if (x) x.value = Math.round(it.x); if (y) y.value = Math.round(it.y);
+  }
+
+  // ---------- typing straight onto the label ----------
+  const ie = $("inlineEdit"); let ieOpen = false;
+  function openInline(selectAll) {
+    const it = D.items[sel]; if (!it || it.type !== "text") return;
+    closePops(); ieOpen = true; ie.hidden = false; ie.value = it.text; positionInline(); drawPreview();
+    ie.focus(); if (selectAll) ie.select(); else ie.setSelectionRange(ie.value.length, ie.value.length);
+  }
+  function positionInline() {
+    if (!ieOpen) return; const it = D.items[sel]; if (!it) { closeInline(); return; }
+    const s = cv.getBoundingClientRect().width / cv.width || 1, b = bbox(it);
+    const w = Math.max(b.w * s + 22, 150);
+    let left = cv.offsetLeft + b.x * s - 10;
+    if (it.align === "center") left = cv.offsetLeft + (b.x + b.w / 2) * s - w / 2;
+    Object.assign(ie.style, {
+      left: left + "px", top: (cv.offsetTop + b.y * s - 6) + "px", width: w + "px", height: (b.h * s + 14) + "px",
+      font: `${it.italic ? "italic " : ""}${it.bold ? "700 " : "400 "}${Math.max(10, it.size * s)}px '${it.font}'`,
+      lineHeight: String(it.lineH), textAlign: it.align,
+    });
+  }
+  function closeInline() {
+    if (!ieOpen) return; ieOpen = false; ie.hidden = true;
+    const it = D.items[sel];
+    if (it && it.type === "text" && !it.text.trim()) { removeItem(sel); return; }
+    renderItems(); drawPreview();
+  }
+  ie.addEventListener("input", () => { const it = D.items[sel]; if (!it) return; keepAnchor(it, () => { it.text = ie.value; }); delete it.auto; markDirty(); drawPreview(); });
+  ie.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Escape" || (e.key === "Enter" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); ie.blur(); } });
+  ie.addEventListener("blur", () => closeInline());
+  window.addEventListener("resize", () => positionInline());
+
+  function insertToken(tok) {
+    const it = D.items[sel];
+    if (ieOpen) {
+      const a = ie.selectionStart, b = ie.selectionEnd;
+      ie.value = ie.value.slice(0, a) + tok + ie.value.slice(b); ie.selectionStart = ie.selectionEnd = a + tok.length;
+      ie.dispatchEvent(new Event("input")); ie.focus(); return;
+    }
+    if (it && it.type === "text") { keepAnchor(it, () => { it.text = it.text + (it.text && !/\s$/.test(it.text) ? " " : "") + tok; }); delete it.auto; markDirty(); fontsReady([it]).then(() => { fitText(it); renderItems(); drawPreview(); }); return; }
+    addLine(newText(tok, { size: 28 }));
+  }
+
+  // ---------- canvas: select, drag, double-click to type ----------
+  let drag = null;
+  const toDots = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; };
+  function hitTest(p) {
+    for (let i = D.items.length - 1; i >= 0; i--) { const b = bbox(D.items[i]); if (p.x >= b.x - 3 && p.x <= b.x + b.w + 3 && p.y >= b.y - 3 && p.y <= b.y + b.h + 3) return i; }
+    return -1;
+  }
+  // ---------- resize handles (corners + edge middles) ----------
+  const dispScale = () => (cv.getBoundingClientRect().width / cv.width) || 1;
+  const HANDLES = { nw: [0, 0], n: [.5, 0], ne: [1, 0], e: [1, .5], se: [1, 1], s: [.5, 1], sw: [0, 1], w: [0, .5] };
+  const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize", n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
+  function handlesFor(it) {
+    const b = bbox(it), k = 1 / dispScale(), pad = 3, x0 = b.x - pad, y0 = b.y - pad, W = b.w + pad * 2, H = b.h + pad * 2;
+    return Object.entries(HANDLES).map(([id, [fx, fy]]) => {
+      const edgeH = id === "n" || id === "s", edgeV = id === "e" || id === "w";
+      return { id, fx, fy, x: x0 + fx * W, y: y0 + fy * H, w: (edgeH ? 18 : edgeV ? 9 : 11) * k, h: (edgeV ? 18 : edgeH ? 9 : 11) * k };
+    });
+  }
+  function hitHandle(p) {
+    const list = selected(); if (list.length !== 1) return null;
+    const slop = 4 / dispScale();
+    return handlesFor(list[0]).find(h => Math.abs(p.x - h.x) <= h.w / 2 + slop && Math.abs(p.y - h.y) <= h.h / 2 + slop) || null;
+  }
+  let resize = null;
+  function startResize(h, p) {
+    const it = D.items[sel], b = bbox(it);
+    // the opposite point stays put while you drag
+    const ax = b.x + (1 - h.fx) * b.w, ay = b.y + (1 - h.fy) * b.h;
+    resize = { it, h, b, ax, ay, size0: it.size, w0: it.w };
+  }
+  function doResize(p) {
+    const { it, h, b, ax, ay } = resize;
+    const kx = h.fx === .5 ? null : Math.abs(p.x - ax) / b.w, ky = h.fy === .5 ? null : Math.abs(p.y - ay) / b.h;
+    let k = kx == null ? ky : ky == null ? kx : Math.max(kx, ky);
+    if (!isFinite(k) || k <= 0) return;
+    if (it.type === "image") it.w = Math.max(8, Math.round(resize.w0 * k));
+    else it.size = Math.max(6, Math.min(600, Math.round(resize.size0 * k)));
+    const nb = bbox(it), fx = 1 - h.fx, fy = 1 - h.fy;
+    it.x = Math.round(ax - fx * nb.w); it.y = Math.round(ay - fy * nb.h);
+    markDirty(); syncXY(); drawPreview();
+  }
+
+  let guides = null; // set while dragging: which center lines the item is snapped to
+  let marquee = null;
+  const normRect = m => ({ x: Math.min(m.x0, m.x1), y: Math.min(m.y0, m.y1), w: Math.abs(m.x1 - m.x0), h: Math.abs(m.y1 - m.y0) });
+  cv.addEventListener("pointerdown", e => {
+    const p = toDots(e), i = hitTest(p), add = e.shiftKey || e.ctrlKey || e.metaKey;
+    cv.setPointerCapture(e.pointerId);
+    const hh = !add && hitHandle(p);
+    if (hh) { startResize(hh, p); return; }
+    if (i < 0) { marquee = { x0: p.x, y0: p.y, x1: p.x, y1: p.y, add, base: add ? selected() : [] }; return; }
+    const it = D.items[i];
+    if (add) { selectItem(i, true); if (!selItems.has(it)) return; }
+    else if (!selItems.has(it)) selectItem(i);
+    else { sel = i; }
+    drag = { start: p, orig: selected().map(x => ({ x, ox: x.x, oy: x.y })), sx: e.clientX, sy: e.clientY, moved: false };
+  });
+  cv.addEventListener("pointermove", e => {
+    const p = toDots(e);
+    if (resize) { doResize(p); return; }
+    if (marquee) { marquee.x1 = p.x; marquee.y1 = p.y; drawPreview(); return; }
+    if (!drag) { const hh = hitHandle(p); cv.style.cursor = hh ? CURSORS[hh.id] : hitTest(p) >= 0 ? "move" : "default"; return; }
+    if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 3) return;
+    drag.moved = true;
+    let dx = Math.round(p.x - drag.start.x), dy = Math.round(p.y - drag.start.y);
+    for (const o of drag.orig) { o.x.x = o.ox + dx; o.x.y = o.oy + dy; }
+    // center guides: snap to the label's middle when close (hold Alt to move freely)
+    const { W, H } = dims(D), bs = drag.orig.map(o => bbox(o.x));
+    const gx0 = Math.min(...bs.map(b => b.x)), gx1 = Math.max(...bs.map(b => b.x + b.w));
+    const gy0 = Math.min(...bs.map(b => b.y)), gy1 = Math.max(...bs.map(b => b.y + b.h));
+    const offX = W / 2 - (gx0 + gx1) / 2, offY = H / 2 - (gy0 + gy1) / 2, snap = 6 / dispScale() + 2;
+    guides = { v: false, h: false };
+    if (!e.altKey && Math.abs(offX) <= snap) { const k = Math.round(offX); for (const o of drag.orig) o.x.x += k; guides.v = true; }
+    if (!e.altKey && Math.abs(offY) <= snap) { const k = Math.round(offY); for (const o of drag.orig) o.x.y += k; guides.h = true; }
+    markDirty(); syncXY(); drawPreview();
+  });
+  const endDrag = e => {
+    if (resize) { const it = resize.it; resize = null; if (it.type === "text") rememberStyle(it); renderEditor(); drawPreview(); return; }
+    if (marquee) {
+      const m = normRect(marquee), base = marquee.base; marquee = null;
+      if (m.w < 3 && m.h < 3) { if (!base.length) selectItem(-1); else drawPreview(); return; }
+      const hit = D.items.filter(x => { const b = bbox(x); return b.x < m.x + m.w && b.x + b.w > m.x && b.y < m.y + m.h && b.y + b.h > m.y; });
+      selectMany([...new Set([...base, ...hit])]); return;
+    }
+    drag = null; if (guides) { guides = null; drawPreview(); }
+  };
+  cv.addEventListener("pointerup", endDrag); cv.addEventListener("pointercancel", endDrag);
+  cv.addEventListener("dblclick", e => { const i = hitTest(toDots(e)); if (i >= 0 && D.items[i].type === "text") { selectItem(i); openInline(); } });
+  $("selAllText").onclick = () => selectMany(D.items.filter(x => x.type === "text"));
+
+  // keyboard: Delete removes, arrows nudge, Enter edits, Esc deselects, Ctrl+D duplicates
+  document.addEventListener("keydown", e => {
+    if ($("view-design").hidden || document.querySelector("dialog[open]")) return;
+    if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") { e.preventDefault(); return selectMany([...D.items]); }
+    const list = selected(), it = D.items[sel]; if (!list.length) return;
+    const step = e.shiftKey ? 10 : 1;
+    const nudge = (dx, dy) => { e.preventDefault(); list.forEach(x => { x.x += dx; x.y += dy; }); markDirty(); syncXY(); drawPreview(); };
+    if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); removeSelected(); }
+    else if (e.key === "ArrowLeft") nudge(-step, 0);
+    else if (e.key === "ArrowRight") nudge(step, 0);
+    else if (e.key === "ArrowUp") nudge(0, -step);
+    else if (e.key === "ArrowDown") nudge(0, step);
+    else if (e.key === "Enter" && list.length === 1 && it.type === "text") { e.preventDefault(); openInline(); }
+    else if (e.key === "Escape") { selectItem(-1); }
+    else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") { e.preventDefault(); list.length > 1 ? $("editor").querySelector('[data-gact="dup"]')?.click() : doAct("dup"); }
+  });
+
+  // ---------- add things ----------
+  $("addText").onclick = async () => {
+    closeInline();
+    const t = newText("New text", { ...lastStyle });
+    D.items.push(t); sel = D.items.length - 1;
+    await fontsReady([t]);
+    placeBelow(t);
+    const { H } = dims(D); if (bbox(t).y + bbox(t).h > H - 4) { centerV(t); t.x += 12; t.y += 12; fitText(t); }
+    markDirty(); renderItems(); renderEditor(); drawPreview(); openInline(true);
+  };
+  $("qCenterH").onclick = () => { const l = selected(); if (!l.length) return toast("Select something on the label first."); l.forEach(centerH); markDirty(); drawPreview(); };
+  $("qCenterV").onclick = () => {
+    const l = selected(); if (!l.length) return toast("Select something on the label first.");
+    // move the highlighted items together so the group is centered up-down
+    const top = Math.min(...l.map(x => bbox(x).y)), bot = Math.max(...l.map(x => bbox(x).y + bbox(x).h)), dy = Math.round((dims(D).H - (bot - top)) / 2 - top);
+    l.forEach(x => { x.y += dy; }); markDirty(); drawPreview();
+  };
+  $("qDate").addEventListener("pointerdown", e => { if (ieOpen) e.preventDefault(); });
+  $("qDate").onclick = () => insertToken("{date}");
+  $("addImage").onclick = () => $("imgFile").click();
+  // Photo or logo? Photos have lots of in-between greys and need dot shading; logos are mostly flat colors.
+  function analyzeImage(img) {
+    const c = document.createElement("canvas"), sc = Math.min(1, 200 / img.naturalWidth);
+    c.width = Math.max(1, Math.round(img.naturalWidth * sc)); c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+    const d = x.getImageData(0, 0, c.width, c.height).data, hist = new Uint32Array(256);
+    for (let i = 0; i < d.length; i += 4) hist[Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2])]++;
+    const n = d.length / 4; let mid = 0, levels = 0;
+    for (let v = 0; v < 256; v++) { if (v > 40 && v < 215) mid += hist[v]; if (hist[v] > n * 0.002) levels++; }
+    const pct = q => { let acc = 0; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * q) return v; } return 255; };
+    let dark = 0; for (let v = 0; v < 110; v++) dark += hist[v];
+    const photo = mid / n > 0.2 && levels > 40;
+    return { photo, line: !photo && dark / n < 0.12, lo: pct(0.01), hi: Math.max(pct(0.99), pct(0.01) + 40) };
+  }
+  $("imgFile").onchange = e => {
+    const file = e.target.files[0]; e.target.value = ""; if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const sc = Math.min(1, 864 / img.naturalWidth), c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(img.src);
+      const small = new Image();
+      small.onload = () => {
+        const { W, H } = dims(D);
+        // shrink to fit inside the label with a small margin
+        const ar = small.naturalHeight / small.naturalWidth;
+        let w = Math.min(W - 8, small.naturalWidth); if (w * ar > H - 8) w = Math.floor((H - 8) / ar); w = Math.max(8, w);
+        // artwork made at exactly the label's dot size is placed 1:1 so it stays pixel-perfect
+        if (small.naturalWidth === W && small.naturalHeight === H) w = W;
+        const look = analyzeImage(small);
+        const it = { id: nextId++, type: "image", img: small, src: small.src, name: file.name, w, x: 0, y: 0, dither: look.photo ? "atkinson" : look.line ? "line" : "threshold", threshold: 128, contrast: 0, invert: false, lo: look.photo ? look.lo : null, hi: look.photo ? look.hi : null };
+        if (look.photo) toast("Photo detected: using dot shading. You can change it in the toolbar.");
+        else if (look.line) toast("Line drawing detected: keeping thin lines. You can change it in the toolbar.");
+        D.items.push(it); centerH(it); centerV(it); sel = D.items.length - 1; markDirty(); renderItems(); renderEditor(); drawPreview();
+      };
+      small.src = c.toDataURL("image/png");
+    };
+    img.onerror = () => toast("That image couldn't be opened. Try a PNG or JPG.", "bad");
+    img.src = URL.createObjectURL(file);
+  };
+  $("addFont").onclick = () => $("fontFile").click();
+  $("fontFile").onchange = async e => {
+    const file = e.target.files[0]; e.target.value = ""; if (!file) return;
+    const name = file.name.replace(/\.[^.]+$/, "").replace(/["\\]/g, "");
+    try {
+      const buf = await file.arrayBuffer(), face = new FontFace(name, buf); await face.load(); document.fonts.add(face);
+      if (!FONTS.includes(name)) FONTS.unshift(name);
+      if (buf.byteLength <= 1500000) { store.fonts[name] = b64(buf); persist(); } else toast(`“${name}” works for now but is too large to keep after you close the page.`);
+      const it = D.items[sel];
+      if (it && it.type === "text") { it.font = name; fitText(it); rememberStyle(it); }
+      else { const t = newText(name, { ...lastStyle, font: name }); D.items.push(t); placeBelow(t); fitText(t); sel = D.items.length - 1; rememberStyle(t); }
+      markDirty(); renderItems(); renderEditor(); refresh(); toast(`Font “${name}” added`, "ok");
+    } catch { toast("That font file couldn't be loaded.", "bad"); }
+  };
+
+  // =================================================================
+  // Library: saved labels, batches, persistence
+  // =================================================================
+  const STORE_KEY = "labelstudio.v1";
+  let store = { labels: [], batches: [], fonts: {} };
+  let qty = {}, activeBatch = null;
+  try { const raw = localStorage.getItem(STORE_KEY); if (raw) store = Object.assign(store, JSON.parse(raw)); } catch {}
+  function persist() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); return true; }
+    catch { toast("This browser wouldn't save. Storage may be full. Download a backup from Settings.", "bad"); return false; }
+  }
+  function b64(buf) { let s = ""; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
+  function unb64(str) { const s = atob(str), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u.buffer; }
+  async function restoreFonts() {
+    for (const [name, data] of Object.entries(store.fonts || {})) {
+      try { const ff = new FontFace(name, unb64(data)); await ff.load(); document.fonts.add(ff); if (!FONTS.includes(name)) FONTS.unshift(name); } catch {}
+    }
+  }
+  function serialize(d) {
+    return { wmm: d.wmm, hmm: d.hmm, border: d.border, invertAll: d.invertAll,
+      items: d.items.map(it => { const { img, id, auto, ...rest } = it; return rest; }) };
+  }
+  const imgCache = new Map();
+  const loadImg = src => { if (!imgCache.has(src)) imgCache.set(src, new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; })); return imgCache.get(src); };
+  async function hydrate(design) {
+    const items = [];
+    for (const raw of design.items) {
+      const it = Object.assign({}, raw, { id: nextId++ });
+      if (it.type === "image") { try { it.img = await loadImg(it.src); } catch { continue; } }
+      items.push(it);
+    }
+    return { wmm: design.wmm, hmm: design.hmm, border: !!design.border, invertAll: !!design.invertAll, items };
+  }
+  async function makeThumb(design) {
+    const d = await hydrate(design); await fontsReady(d.items);
+    return monoToCanvas(renderMono(d)).toDataURL("image/png");
+  }
+  const byName = (a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+  const newId = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  // ---------- print list ----------
+  function totals() { let n = 0, k = 0; for (const l of store.labels) if (qty[l.id]) { n += qty[l.id]; k++; } return { n, k }; }
+  function batchMatches(b) {
+    const e = b.entries.filter(x => store.labels.some(l => l.id === x.labelId));
+    const keys = Object.keys(qty);
+    return e.length === keys.length && e.every(x => qty[x.labelId] === x.qty);
+  }
+  let printMode = LS.get("labelstudio.printMode", "");
+  const isPrep = l => l.source === "sheet";
+  function modeLabels(m) { return store.labels.filter(l => m === "prep" ? isPrep(l) : !isPrep(l)); }
+  function setMode(m) { printMode = m; LS.set("labelstudio.printMode", m); $("search").value = ""; renderPrint(); }
+  const autoMode = () => store.labels.some(isPrep) ? "prep" : "custom";
+  document.querySelectorAll(".modes [data-mode]").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+  $("saveBatchBtn").onclick = () => saveBatchFlow();
+
+  function renderModes() {
+    if (!["prep", "custom", "batch"].includes(printMode) || !LS.get("labelstudio.printMode", "")) printMode = autoMode();
+    document.querySelectorAll(".modes [data-mode]").forEach(b => {
+      const m = b.dataset.mode, on = m === printMode;
+      b.setAttribute("aria-selected", String(on));
+      const n = m === "batch" ? 0 : modeLabels(m).reduce((a, l) => a + (qty[l.id] || 0), 0);
+      b.innerHTML = `${m[0].toUpperCase() + m.slice(1)}${n && !on ? `<b>${n}</b>` : ""}`;
+    });
+    $("saveBatchBtn").hidden = printMode === "batch";
+    $("search").placeholder = printMode === "batch" ? "Search batches" : printMode === "prep" ? "Search prep items" : "Search custom labels";
+  }
+  function renderBatches() {
+    // note under the tabs when a batch is loaded
+    const meta = $("bmeta"), b = store.batches.find(x => x.name === activeBatch);
+    meta.innerHTML = ""; meta.hidden = !b;
+    if (!b) return;
+    const changed = !batchMatches(b);
+    meta.innerHTML = `<span class="note">${changed ? `You've changed the amounts in “${esc(b.name)}”.` : `Batch “${esc(b.name)}” is loaded.`}</span>`;
+    if (changed) { const u = document.createElement("button"); u.className = "btn sm"; u.textContent = `Update “${b.name}”`; u.onclick = () => { b.entries = Object.entries(qty).map(([labelId, q]) => ({ labelId, qty: q })); persist(); renderPrint(); toast(`Updated “${b.name}”`, "ok"); }; meta.appendChild(u); }
+    const clr = document.createElement("button"); clr.className = "btn sm ghost"; clr.textContent = "Unload"; clr.onclick = () => { activeBatch = null; qty = {}; renderPrint(); };
+    meta.appendChild(clr);
+  }
+  let catFilter = "";
+  function renderCats(labels) {
+    const cats = printMode === "prep" ? [...new Set(labels.map(l => l.category).filter(Boolean))].sort() : [];
+    const el = $("cats"); el.hidden = cats.length < 2; el.innerHTML = "";
+    if (!cats.includes(catFilter)) catFilter = "";
+    for (const c of ["", ...cats]) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = c || "All"; b.className = c === catFilter ? "on" : "";
+      b.onclick = () => { catFilter = c; renderList(); }; el.appendChild(b);
+    }
+  }
+  function labelRow(lab) {
+    const n = qty[lab.id] || 0, row = document.createElement("div");
+    row.className = "lrow" + (n ? " has" : "");
+    row.innerHTML = `<img class="thumb" alt="">
+      <div class="lname"><strong></strong><button type="button">Edit</button></div>
+      <div class="stepper"><button type="button" aria-label="Less">−</button><input type="number" min="0" max="999" value="${n}" aria-label="Quantity"><button type="button" aria-label="More">+</button></div>`;
+    const img = row.querySelector("img"); if (lab.thumb) img.src = lab.thumb; else img.style.visibility = "hidden";
+    row.querySelector("strong").textContent = lab.name;
+    if (lab.shelf) { const em = document.createElement("em"); em.textContent = shelfText(lab.shelf); row.querySelector("strong").appendChild(em); }
+    if (lab.note) { const nt = document.createElement("small"); nt.className = "lnote"; nt.textContent = lab.note; row.querySelector(".lname button").before(nt); }
+    row.querySelector(".lname button").onclick = () => openLabel(lab.id);
+    const [minus, inp, plus] = row.querySelectorAll(".stepper > *");
+    const setQ = v => { v = Math.max(0, Math.min(999, v | 0)); if (v) qty[lab.id] = v; else delete qty[lab.id]; inp.value = v; row.classList.toggle("has", !!v); updatePrintBar(); renderBatches(); renderModes(); };
+    minus.onclick = () => setQ((qty[lab.id] || 0) - 1);
+    plus.onclick = () => setQ((qty[lab.id] || 0) + 1);
+    inp.oninput = () => setQ(parseInt(inp.value) || 0);
+    inp.onfocus = () => inp.select();
+    if (!isPrep(lab) && printMode === "custom") {
+      const del = document.createElement("button"); del.type = "button"; del.className = "trashbtn"; del.innerHTML = TRASH_IC;
+      del.setAttribute("aria-label", `Delete ${lab.name}`); del.title = "Delete label";
+      del.onclick = () => deleteLabel(lab);
+      row.querySelector(".stepper").appendChild(del);
+    }
+    return row;
+  }
+  const TRASH_IC = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-3 6h12l-1 12H7L6 9Zm4 2v8h2v-8h-2Zm4 0v8h2v-8h-2Z"/></svg>';
+  // "are you sure" pop-up; resolves true only when Delete is pressed
+  function confirmDelete(title, text) {
+    return new Promise(res => {
+      const dlg = $("dlgConfirm"); $("cfTitle").textContent = title; $("cfText").textContent = text;
+      dlg.returnValue = ""; dlg.showModal();
+      dlg.addEventListener("close", () => res(dlg.returnValue === "ok"), { once: true });
+    });
+  }
+  async function deleteLabel(lab) {
+    if (!(await confirmDelete(`Delete “${lab.name}”?`, "This removes the label from your list and from any batches that use it. This can't be undone."))) return;
+    store.labels = store.labels.filter(l => l !== lab); delete qty[lab.id];
+    for (const b of store.batches) b.entries = b.entries.filter(e => e.labelId !== lab.id);
+    if (editingId === lab.id) startNew();
+    persist(); renderPrint(); toast(`Deleted “${lab.name}”`);
+  }
+  function emptyBox(title, text, btnText, fn) {
+    const d = document.createElement("div"); d.className = "empty";
+    d.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    if (btnText) { const b = document.createElement("button"); b.className = "btn go"; b.textContent = btnText; b.onclick = fn; d.appendChild(b); }
+    return d;
+  }
+  function renderList() {
+    renderModes();
+    const el = $("list"), q = $("search").value.trim().toLowerCase(); el.innerHTML = "";
+    if (printMode === "batch") return renderBatchList(el, q);
+    const all = modeLabels(printMode);
+    renderCats(all);
+    if (!all.length) {
+      el.appendChild(printMode === "prep"
+        ? emptyBox("No prep items yet", "Import your prep list as a .csv file, or connect a Google Sheet in Settings.", "Import a .csv file", () => $("prepFile").click())
+        : emptyBox("No custom labels yet", "Design a label once, save it, and it shows up here ready to print.", "Design a label", () => { startNew(); go("design"); }));
+      return;
+    }
+    const list = all.filter(l => (!q || l.name.toLowerCase().includes(q)) && (!catFilter || (l.category || "") === catFilter));
+    if (!list.length) { el.appendChild(emptyBox("", `No label matches “${esc(q)}”.`)); return; }
+    for (const lab of list) el.appendChild(labelRow(lab));
+  }
+  function renderBatchList(el, q) {
+    $("cats").hidden = true;
+    const list = store.batches.filter(b => !q || b.name.toLowerCase().includes(q));
+    if (!store.batches.length) { el.appendChild(emptyBox("No batches yet", "Set amounts in Prep or Custom, then tap + Save as batch to load them again in one tap.")); return; }
+    if (!list.length) { el.appendChild(emptyBox("", `No batch matches “${esc(q)}”.`)); return; }
+    for (const b of list) {
+      const entries = b.entries.filter(e => store.labels.some(l => l.id === e.labelId));
+      const n = entries.reduce((a, e) => a + e.qty, 0), on = activeBatch === b.name;
+      const row = document.createElement("div"); row.className = "brow" + (on ? " on" : "");
+      row.innerHTML = `<div><strong></strong><span>${n} label${n === 1 ? "" : "s"} · ${entries.length} item${entries.length === 1 ? "" : "s"}</span></div><div class="acts"></div>`;
+      row.querySelector("strong").textContent = b.name;
+      const acts = row.querySelector(".acts");
+      const load = document.createElement("button"); load.className = on ? "btn" : "btn go"; load.textContent = on ? "Loaded" : "Load";
+      load.onclick = () => { if (on) { activeBatch = null; qty = {}; } else { activeBatch = b.name; qty = {}; for (const e of entries) qty[e.labelId] = e.qty; } renderPrint(); };
+      const rn = document.createElement("button"); rn.className = "btn ghost"; rn.textContent = "Rename";
+      rn.onclick = () => askName("Rename batch", "", b.name, "Rename").then(nm => { if (!nm || nm === b.name) return; if (store.batches.some(x => x !== b && x.name.toLowerCase() === nm.toLowerCase())) return toast("A batch with that name already exists.", "bad"); if (activeBatch === b.name) activeBatch = nm; b.name = nm; store.batches.sort(byName); persist(); renderPrint(); });
+      const del = document.createElement("button"); del.type = "button"; del.className = "trashbtn"; del.innerHTML = TRASH_IC;
+      del.setAttribute("aria-label", `Delete batch ${b.name}`); del.title = "Delete batch";
+      del.onclick = async () => {
+        if (!(await confirmDelete(`Delete batch “${b.name}”?`, "Your labels stay. Only this saved set of amounts is removed."))) return;
+        store.batches = store.batches.filter(x => x !== b); if (activeBatch === b.name) { activeBatch = null; qty = {}; } persist(); renderPrint(); toast("Batch deleted");
+      };
+      acts.append(load, rn, del);
+      el.appendChild(row);
+      if (on) {
+        // show what's in the loaded batch so amounts can be tweaked before printing
+        const sub = document.createElement("div"); sub.className = "bsub";
+        for (const lab of store.labels.filter(l => qty[l.id] || entries.some(e => e.labelId === l.id))) sub.appendChild(labelRow(lab));
+        el.appendChild(sub);
+      }
+    }
+  }
+  function renderPrint() {
+    const none = !store.labels.length;
+    document.querySelector(".searchwrap").hidden = none && printMode !== "batch";
+    renderBatches(); renderList(); updatePrintBar();
+    $("libStats").textContent = `${store.labels.length} labels, ${store.batches.length} batches`;
+  }
+  $("search").oninput = renderList;
+
+  function updatePrintBar() {
+    const { n, k } = totals(), btn = $("printBatch");
+    $("clearQty").hidden = !n;
+    if (!n) $("printSum").innerHTML = "<strong>Nothing selected</strong>Tap + on a label to add it";
+    else $("printSum").innerHTML = `<strong>${n} label${n > 1 ? "s" : ""}</strong>${k} kind${k > 1 ? "s" : ""}${activeBatch ? ` from “${esc(activeBatch)}”` : ""}`;
+    if (busy) { btn.disabled = true; return; }
+    if (!sendChunk) { btn.disabled = false; btn.className = "printbtn connect"; btn.textContent = "Connect printer"; return; }
+    btn.className = "printbtn"; btn.disabled = !n; btn.textContent = n ? `Print ${n}` : "Print";
+  }
+  $("clearQty").onclick = () => { qty = {}; activeBatch = null; renderPrint(); };
+
+  function askName(title, help, value, okText) {
+    return new Promise(res => {
+      const dlg = $("dlgName"); $("dlgNameTitle").textContent = title; $("dlgNameHelp").textContent = help; $("dlgNameHelp").hidden = !help;
+      $("dlgNameInput").value = value || ""; $("dlgNameOk").textContent = okText || "Save";
+      dlg.returnValue = ""; dlg.showModal(); setTimeout(() => $("dlgNameInput").select(), 30);
+      dlg.addEventListener("close", () => res(dlg.returnValue === "ok" ? $("dlgNameInput").value.trim() : null), { once: true });
+    });
+  }
+  async function saveBatchFlow() {
+    if (!totals().n) return toast("Set some amounts with + first, then save them as a batch.");
+    const name = await askName("Save batch", "Give these amounts a name so you can load them again in one tap.", "", "Save batch");
+    if (!name) return;
+    const entries = Object.entries(qty).map(([labelId, q]) => ({ labelId, qty: q }));
+    const ex = store.batches.find(b => b.name.toLowerCase() === name.toLowerCase());
+    if (ex) ex.entries = entries; else store.batches.push({ name, entries });
+    store.batches.sort(byName);
+    // start fresh after saving; the batch is waiting under the Batch tab
+    qty = {}; activeBatch = null;
+    if (persist()) toast(`${ex ? "Updated" : "Saved"} batch “${ex ? ex.name : name}”. Find it under Batch.`, "ok");
+    renderPrint();
+  }
+
+  // ---------- open / save labels ----------
+  function updateDesignBar() {
+    const lab = store.labels.find(l => l.id === editingId);
+    $("designSumName").textContent = lab ? lab.name : ($("labelName").value.trim() || "Unsaved label");
+    $("designSumNote").textContent = lab ? (dirty ? "Unsaved changes" : "Saved") : "Print it now or save it to your list";
+    $("deleteLabel").hidden = !lab;
+    $("saveLabel").textContent = lab ? (dirty ? "Save changes" : "Saved") : "Save label";
+    $("saveLabel").disabled = !!lab && !dirty;
+  }
+  function loadDesign(d) { closeInline(); Object.assign(D, d); sel = -1; selItems = new Set(); renderItems(); renderEditor(); }
+  async function openLabel(id) {
+    const lab = store.labels.find(l => l.id === id); if (!lab) return;
+    loadDesign(await hydrate(lab.design)); editingId = id; $("labelName").value = lab.name; dirty = false; updateDesignBar();
+    go("design"); refresh();
+  }
+  function startNew() {
+    loadDesign({ wmm: 50.8, hmm: 25.4, border: false, invertAll: false, items: [] });
+    editingId = null; $("labelName").value = ""; dirty = false; updateDesignBar();
+  }
+  // put a new line under whatever is already on the label
+  function placeBelow(it) {
+    let y = 12; for (const o of D.items) if (o !== it) y = Math.max(y, bbox(o).y + bbox(o).h + 6);
+    it.y = Math.round(y); centerH(it);
+  }
+  async function addLine(it) {
+    D.items.push(it); placeBelow(it); sel = D.items.length - 1; markDirty(); renderItems(); renderEditor();
+    await fontsReady([it]); placeBelow(it); fitText(it); drawPreview();
+  }
+  $("newLabel").onclick = () => { if (dirty && !confirmDiscard()) return; startNew(); drawPreview(); $("labelName").focus(); };
+  let discardArm = 0;
+  function confirmDiscard() { if (Date.now() - discardArm < 4000) return true; discardArm = Date.now(); toast("You have unsaved changes. Press again to discard them."); return false; }
+  // typing a name puts it on the label as the title, until you edit that title yourself
+  $("labelName").oninput = () => {
+    dirty = true;
+    if (!editingId) {
+      const name = $("labelName").value.trim().toUpperCase();
+      let title = D.items.find(i => i.auto);
+      if (!title && name && !D.items.some(i => i.type === "text")) {
+        title = newText(name, { font: "Bebas Neue", size: 64, auto: true });
+        D.items.unshift(title); title.y = 12; sel = 0;
+        // push anything already there down below the title
+        fontsReady([title]).then(() => { const h = bbox(title).h + 18; D.items.forEach(o => { if (o !== title) o.y += h; }); centerH(title); drawPreview(); });
+      }
+      if (title) {
+        if (!name) { D.items.splice(D.items.indexOf(title), 1); sel = D.items.length ? 0 : -1; }
+        else { title.text = name; title.size = 64; fitText(title); centerH(title); }
+        renderItems(); renderEditor(); drawPreview();
+      }
+    }
+    updateDesignBar();
+  };
+  $("addPrep").onclick = () => addLine(newText("Prep: {day} {date} {time}", { size: 26 }));
+  $("addUse").onclick = () => {
+    const n = Math.max(0, Math.min(365, parseInt($("useDays").value) || 0));
+    addLine(newText(`USE BY {day+${n}} {date+${n}}`, { size: 30, bold: true }));
+  };
+  $("saveLabel").onclick = async () => {
+    const name = $("labelName").value.trim();
+    if (!name) { toast("Name the label first, e.g. Chicken Salad."); $("labelName").focus(); return; }
+    if (!D.items.length) return toast("This label is empty. Add some text first.");
+    const design = serialize(D), thumb = await makeThumb(design);
+    let lab = store.labels.find(l => l.id === editingId);
+    const clash = store.labels.find(l => l !== lab && l.name.toLowerCase() === name.toLowerCase());
+    if (clash && !lab) lab = clash; else if (clash) return toast(`Another label is already called “${clash.name}”.`, "bad");
+    if (lab) Object.assign(lab, { name, design, thumb }, lab.source === "sheet" ? { custom: true } : {}); else { lab = { id: newId("L"), name, design, thumb }; store.labels.push(lab); }
+    store.labels.sort(byName); dirty = false;
+    if (persist()) toast(`Saved “${name}”. Ready for the next one.`, "ok");
+    renderPrint(); startNew(); drawPreview();
+    window.scrollTo({ top: 0, behavior: "smooth" }); $("labelName").focus();
+  };
+  $("deleteLabel").onclick = () => {
+    const btn = $("deleteLabel"), lab = store.labels.find(l => l.id === editingId); if (!lab) return;
+    if (!btn.dataset.c) { btn.dataset.c = 1; btn.textContent = `Delete “${lab.name}”?`; setTimeout(() => { delete btn.dataset.c; btn.textContent = "Delete"; }, 3000); return; }
+    delete btn.dataset.c; btn.textContent = "Delete";
+    store.labels = store.labels.filter(l => l !== lab); delete qty[lab.id];
+    for (const b of store.batches) b.entries = b.entries.filter(e => e.labelId !== lab.id);
+    persist(); toast(`Deleted “${lab.name}”`); startNew(); renderPrint(); go("print");
+  };
+
+  // copies stepper (design view)
+  const copiesVal = () => Math.max(1, Math.min(99, parseInt($("copies").value) || 1));
+  $("cMinus").onclick = () => { $("copies").value = Math.max(1, copiesVal() - 1); };
+  $("cPlus").onclick = () => { $("copies").value = Math.min(99, copiesVal() + 1); };
+  $("copies").onfocus = () => $("copies").select();
+
+  // =================================================================
+  // Printer connection
+  // =================================================================
+  let sendChunk = null, chunkSize = 2048, chunkDelay = 15, disconnectFn = null, busy = false, deviceName = "";
+  const BLOCKED = "This page can't reach printers here. Open the downloaded file in Chrome or Edge on a computer.";
+  const BLE_SERVICES = [
+    "00005500-d102-11e1-9b23-74f07d000000", "ae5d1e47-5c13-43a0-8635-82ad38a1381f", // PrepWizardBix (Bixolon SLP-DX220B)
+    "49535343-fe7d-4ae5-8fa9-9fafd205e455", "0000ffe0-0000-1000-8000-00805f9b34fb", "0000ff00-0000-1000-8000-00805f9b34fb",
+    "000018f0-0000-1000-8000-00805f9b34fb", "0000fee7-0000-1000-8000-00805f9b34fb", "e7810a71-73ae-499d-8c15-faa9aef0c3f2",
+    "6e400001-b5a3-f393-e0a9-e50e24dcca9e", "0000ae30-0000-1000-8000-00805f9b34fb", "0000fff0-0000-1000-8000-00805f9b34fb",
+    "0000ffe5-0000-1000-8000-00805f9b34fb", "0000fee0-0000-1000-8000-00805f9b34fb", "0003cdd0-0000-1000-8000-00805f9b0131",
+    "38eb4a80-c570-11e3-9507-0002a5d5c51b",
+  ];
+  function normUuid(u) {
+    u = String(u).trim().toLowerCase().replace(/^0x/, "");
+    if (/^[0-9a-f]{4}$/.test(u)) return `0000${u}-0000-1000-8000-00805f9b34fb`;
+    if (/^[0-9a-f]{8}$/.test(u)) return `${u}-0000-1000-8000-00805f9b34fb`;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(u) ? u : null;
+  }
+  function setConn(name) {
+    deviceName = name || "";
+    const on = !!sendChunk;
+    $("connPill").classList.toggle("on", on);
+    $("connText").textContent = on ? deviceName : "Connect printer";
+    $("setConnState").textContent = on ? `Connected to ${deviceName}` : "Not connected";
+    $("setDisconnect").hidden = !on;
+    updatePrintBar();
+  }
+  async function dropConnection() { if (disconnectFn) { try { await disconnectFn(); } catch {} } sendChunk = null; disconnectFn = null; setConn(); }
+
+  // ---- remember the last printer so we can reconnect without the picker ----
+  const LAST_KEY = "labelstudio.lastPrinter";
+  const lastPrinter = () => { try { return JSON.parse(LS.get(LAST_KEY, "null")); } catch { return null; } };
+  let knownBle = null, manualDisconnect = false;
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error("timed out"), { name: "TimeoutError" })), ms))]);
+  function bleServices() {
+    const extra = ($("bleUuid").value || "").split(/[\s,;]+/).map(normUuid).filter(Boolean);
+    return [...new Set([...extra, ...BLE_SERVICES])];
+  }
+  function setConnecting(text) {
+    $("connPill").classList.remove("on"); $("connText").textContent = text;
+  }
+
+  // Connect GATT on an already-permitted device and wire up sending.
+  async function setupBle(device, quiet) {
+    const server = await withTimeout(device.gatt.connect(), quiet ? 6000 : 15000);
+    let services = []; try { services = await server.getPrimaryServices(); } catch {}
+    const writable = [];
+    for (const svc of services) {
+      let chars = []; try { chars = await svc.getCharacteristics(); } catch {}
+      const hasNotify = chars.some(c => c.properties.notify || c.properties.indicate);
+      for (const c of chars) if (c.properties.writeWithoutResponse || c.properties.write)
+        writable.push({ c, svc: svc.uuid, score: (svc.uuid.startsWith("00005500") ? 4 : 0) + (c.properties.writeWithoutResponse ? 2 : 0) + (hasNotify ? 1 : 0) });
+    }
+    if (!writable.length) {
+      try { device.gatt.disconnect(); } catch {}
+      if (!quiet) { toast("Connected, but this printer's data channel wasn't found. Add its service ID in Settings.", "bad", 8000); go("settings"); }
+      throw Object.assign(new Error("no data channel"), { name: "NoChannel" });
+    }
+    writable.sort((a, b) => b.score - a.score);
+    const remembered = LS.get("labelstudio.bleChar", null);
+    let pick = writable.find(w => w.c.uuid === remembered) || writable[0], target = pick.c;
+    const selEl = $("bleChar"); selEl.innerHTML = "";
+    writable.forEach((w, i) => { const o = document.createElement("option"); o.value = i; o.textContent = `Channel ${i + 1} (${w.c.uuid.slice(0, 8)})`; o.selected = w === pick; selEl.appendChild(o); });
+    $("bleCharRow").hidden = writable.length < 2;
+    selEl.onchange = () => { const w = writable[+selEl.value]; if (w) { target = w.c; LS.set("labelstudio.bleChar", w.c.uuid); toast(`Using channel ${+selEl.value + 1}`); } };
+    chunkSize = 180;
+    sendChunk = async bytes => {
+      const nr = !!target.properties.writeWithoutResponse; chunkDelay = nr ? 20 : 0;
+      if (nr && target.writeValueWithoutResponse) await target.writeValueWithoutResponse(bytes);
+      else if (target.writeValueWithResponse) await target.writeValueWithResponse(bytes);
+      else await target.writeValue(bytes);
+    };
+    disconnectFn = async () => device.gatt.disconnect();
+    if (!device.__lsHooked) {
+      device.__lsHooked = true;
+      device.addEventListener("gattserverdisconnected", () => {
+        if (!sendChunk) return;
+        sendChunk = null; disconnectFn = null; setConn();
+        if (!manualDisconnect) toast("Printer disconnected. It will reconnect when you print.", "bad");
+      });
+    }
+    knownBle = device; manualDisconnect = false;
+    LS.set(LAST_KEY, JSON.stringify({ type: "ble", id: device.id, name: device.name || "Printer" }));
+    setConn(device.name || "Printer");
+  }
+
+  // Try to reconnect silently: this session's device, else one the browser remembers (getDevices).
+  async function silentBle() {
+    if (!navigator.bluetooth) return false;
+    let dev = knownBle;
+    if (!dev && navigator.bluetooth.getDevices) {
+      const last = lastPrinter();
+      try {
+        const devs = await navigator.bluetooth.getDevices();
+        dev = devs.find(d => last && (d.id === last.id || d.name === last.name)) || (devs.length === 1 ? devs[0] : null);
+      } catch {}
+    }
+    if (!dev) return false;
+    try { await setupBle(dev, true); return true; } catch { return false; }
+  }
+  async function silentUsb() {
+    if (!("serial" in navigator) || !navigator.serial.getPorts) return false;
+    try {
+      const ports = await navigator.serial.getPorts(); if (!ports.length) return false;
+      await openPort(ports[0]); return true;
+    } catch { return false; }
+  }
+  async function openPort(port) {
+    if (!port.writable) await port.open({ baudRate: 115200 });
+    const writer = port.writable.getWriter();
+    chunkSize = 2048; chunkDelay = 15; sendChunk = b => writer.write(b);
+    disconnectFn = async () => { try { writer.releaseLock(); } catch {} await port.close(); };
+    LS.set(LAST_KEY, JSON.stringify({ type: "usb", name: "USB printer" }));
+    manualDisconnect = false; setConn("USB printer");
+  }
+  // Reconnect without asking, if we can. Returns true when ready to print.
+  async function autoConnect(reason) {
+    if (sendChunk) return true;
+    const last = lastPrinter(); if (!last) return false;
+    setConnecting("Connecting…");
+    const ok = last.type === "usb" ? await silentUsb() : await silentBle();
+    if (!ok) setConn();
+    else if (reason === "startup") toast(`Connected to ${deviceName}`, "ok");
+    return ok;
+  }
+
+  async function connectBle() {
+    $("dlgConn").open && $("dlgConn").close();
+    if (!navigator.bluetooth) return toast("This browser has no Bluetooth access. Use Chrome or Edge on a computer, and open the downloaded file.", "bad");
+    await dropConnection();
+    try {
+      LS.set("labelstudio.bleUuid", $("bleUuid").value);
+      const device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: bleServices() });
+      setConnecting(`Connecting to ${device.name || "printer"}…`);
+      await setupBle(device);
+      toast(`Connected to ${device.name || "printer"}`, "ok");
+      return true;
+    } catch (err) {
+      await dropConnection();
+      if (err && err.name === "NoChannel") return false;
+      if (err && err.name === "NotFoundError") { if (!/cancel/i.test(err.message)) toast("No printer picked. If it isn't listed, turn off the tablet's Bluetooth and restart the printer.", "bad"); }
+      else if (err && err.name === "SecurityError") toast(BLOCKED, "bad", 8000);
+      else if (err && (err.name === "NetworkError" || err.name === "TimeoutError")) toast("Couldn't connect. The PrepWizard tablet may still be connected to the printer. Turn its Bluetooth off and try again.", "bad", 8000);
+      else toast("Bluetooth error: " + (err && err.message || err), "bad");
+      return false;
+    }
+  }
+  async function connectUsb() {
+    $("dlgConn").open && $("dlgConn").close();
+    if (!("serial" in navigator)) return toast("This browser can't open USB or COM ports. Use Chrome or Edge on a computer.", "bad");
+    await dropConnection();
+    try {
+      let port;
+      try { port = await navigator.serial.requestPort({ allowedBluetoothServiceClassIds: ["00001101-0000-1000-8000-00805f9b34fb"] }); }
+      catch (e) { if (e && e.name === "TypeError") port = await navigator.serial.requestPort(); else throw e; }
+      await openPort(port); toast("Connected over USB", "ok"); return true;
+    } catch (err) {
+      await dropConnection();
+      if (err && err.name === "NotFoundError") toast("No port picked. For Bluetooth, use the Bluetooth option instead.");
+      else if (err && err.name === "SecurityError") toast(BLOCKED, "bad", 8000);
+      else toast("Couldn't open the port: " + (err && err.message || err), "bad");
+      return false;
+    }
+  }
+  // One tap: reconnect silently if possible, otherwise go straight to the picker for the last-used kind.
+  async function openConnect() {
+    const t0 = Date.now();
+    if (await autoConnect()) { toast(`Connected to ${deviceName}`, "ok"); return true; }
+    const last = lastPrinter();
+    // the browser only opens its picker right after a click, so skip straight to it only if the silent try was quick
+    if (last && last.type === "ble" && navigator.bluetooth && Date.now() - t0 < 3500) { toast("Pick your printer from the list"); return connectBle(); }
+    $("dlgConn").showModal(); return false;
+  }
+  $("connPill").onclick = () => sendChunk ? go("settings") : openConnect();
+  $("dlgBle").onclick = connectBle; $("dlgUsb").onclick = connectUsb; $("dlgConnClose").onclick = () => $("dlgConn").close();
+  $("setConnBle").onclick = connectBle; $("setConnUsb").onclick = connectUsb;
+  $("setDisconnect").onclick = async () => { manualDisconnect = true; await dropConnection(); toast("Disconnected. PrepWizard can use the printer now."); };
+
+  async function sendBytes(bytes, label) {
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      await sendChunk(bytes.slice(i, i + chunkSize));
+      if (chunkDelay) await new Promise(r => setTimeout(r, chunkDelay));
+    }
+  }
+  function setBusy(b, text) {
+    busy = b;
+    for (const id of ["printBatch", "printOne"]) { const el = $(id); el.disabled = b; if (b) el.textContent = text || "Printing…"; }
+    if (!b) { $("printOne").textContent = "Print"; updatePrintBar(); }
+  }
+
+  $("printBatch").onclick = async () => {
+    if (!sendChunk && !(await openConnect())) return;
+    const jobs = store.labels.filter(l => qty[l.id]); if (!jobs.length || busy) return;
+    const total = jobs.reduce((a, l) => a + qty[l.id], 0); let done = 0, sent = 0;
+    try {
+      for (const lab of jobs) {
+        setBusy(true, `Printing ${sent + 1}–${sent + qty[lab.id]} of ${total}`);
+        const d = await hydrate(lab.design); await fontsReady(d.items);
+        await sendBytes(buildJob(renderMono(d), qty[lab.id]).bytes);
+        sent += qty[lab.id]; done++;
+        await new Promise(r => setTimeout(r, 300));
+      }
+      toast(`Sent ${total} label${total > 1 ? "s" : ""} to the printer`, "ok");
+    } catch (err) {
+      toast(`Stopped after ${done} of ${jobs.length} kinds: ${err && err.message || err}`, "bad");
+    } finally { setBusy(false); }
+  };
+  $("printOne").onclick = async () => {
+    if (!sendChunk && !(await openConnect())) return;
+    if (!D.items.length) return toast("This label is empty.");
+    if (busy) return;
+    setBusy(true);
+    try { await fontsReady(D.items); const n = copiesVal(); await sendBytes(buildJob(renderMono(D), n).bytes); toast(`Sent ${n} label${n > 1 ? "s" : ""} to the printer`, "ok"); }
+    catch (err) { toast("Printing failed: " + (err && err.message || err), "bad"); }
+    finally { setBusy(false); }
+  };
+
+  // settings persistence
+  try { const s = JSON.parse(LS.get("labelstudio.settings", "{}")); if (s.lang) $("lang").value = s.lang; if (s.dark != null) $("dark").value = s.dark; } catch {}
+  const saveSettings = () => LS.set("labelstudio.settings", JSON.stringify({ lang: $("lang").value, dark: $("dark").value }));
+  $("lang").onchange = saveSettings; $("dark").onchange = saveSettings;
+  $("bleUuid").value = LS.get("labelstudio.bleUuid", "");
+
+  // =================================================================
+  // Files: backup, restore, exports
+  // =================================================================
+  let downloads = null;
+  try { if (window.claude && typeof window.claude.use === "function") window.claude.use("downloads").then(d => { downloads = d; }).catch(() => {}); } catch {}
+  async function saveFile(filename, blob) {
+    if (downloads) { try { await downloads.save({ filename, data: blob }); toast(`Saved ${filename}`, "ok"); } catch (e) { if (e && e.code !== "declined") toast("Saving isn't available here.", "bad"); } return; }
+    try { const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000); }
+    catch { toast("Saving isn't available here.", "bad"); }
+  }
+  $("exportLib").onclick = () => {
+    const d = new Date(), stamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    saveFile(`luna-labels-backup-${stamp}.json`, new Blob([JSON.stringify({ app: "label-studio", version: 1, ...store })], { type: "application/json" }));
+  };
+  $("importLib").onclick = () => $("importFile").click();
+  $("importFile").onchange = async e => {
+    const file = e.target.files[0]; e.target.value = ""; if (!file) return;
+    try {
+      const data = JSON.parse(await file.text()); if (!Array.isArray(data.labels)) throw new Error("this isn't a Luna Labels backup");
+      let added = 0;
+      for (const l of data.labels) {
+        const ex = store.labels.find(x => x.id === l.id || x.name.toLowerCase() === l.name.toLowerCase());
+        if (ex) { if (ex.id !== l.id) for (const b of data.batches || []) for (const en of b.entries) if (en.labelId === l.id) en.labelId = ex.id; Object.assign(ex, { name: l.name, design: l.design, thumb: l.thumb || ex.thumb }); }
+        else { store.labels.push(l); added++; }
+      }
+      for (const b of data.batches || []) { const ex = store.batches.find(x => x.name.toLowerCase() === b.name.toLowerCase()); if (ex) ex.entries = b.entries; else store.batches.push(b); }
+      Object.assign(store.fonts, data.fonts || {});
+      store.labels.sort(byName); store.batches.sort(byName); persist(); await restoreFonts(); await fillThumbs(); renderPrint();
+      toast(`Restored ${data.labels.length} labels (${added} new) and ${(data.batches || []).length} batches`, "ok");
+    } catch (err) { toast("Couldn't read that backup: " + (err && err.message || err), "bad"); }
+  };
+  $("dlPng").onclick = () => monoToCanvas(renderMono(D)).toBlob(b => saveFile(($("labelName").value.trim() || "label") + ".png", b), "image/png");
+  $("dlCode").onclick = () => saveFile(`label-${$("lang").value}.txt`, new Blob([buildJob(renderMono(D), copiesVal()).bytes]));
+  $("copyCode").onclick = async () => {
+    if ($("lang").value !== "zpl") return toast("Switch the printer language to ZPL to copy the code as text.");
+    try { await navigator.clipboard.writeText(buildJob(renderMono(D), copiesVal()).text); toast("ZPL copied", "ok"); } catch { toast("Clipboard access was blocked.", "bad"); }
+  };
+
+  async function fillThumbs() {
+    let changed = false;
+    for (const l of store.labels) if (!l.thumb) { try { l.thumb = await makeThumb(l.design); changed = true; } catch {} }
+    if (changed) persist();
+  }
+
+  // =================================================================
+  // Google Sheet sync
+  // =================================================================
+  function sheetCsvUrl(u) {
+    u = String(u || "").trim(); if (!u) return null;
+    let m = u.match(/docs\.google\.com\/spreadsheets\/d\/e\/([\w-]+)/);
+    if (m) { const g = (u.match(/[?&#]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/e/${m[1]}/pub?output=csv${g ? "&gid=" + g : ""}`; }
+    m = u.match(/docs\.google\.com\/spreadsheets\/d\/([\w-]+)/);
+    if (m) { const g = (u.match(/[?&#]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?tqx=out:csv${g ? "&gid=" + g : ""}`; }
+    return /^https:\/\//.test(u) ? u : null;
+  }
+  function parseCsv(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+      else if (c === '"') q = true;
+      else if (c === ",") { row.push(cur); cur = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cur); rows.push(row); row = []; cur = ""; }
+      else cur += c;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows.map(r => r.map(x => x.trim())).filter(r => r.some(Boolean));
+  }
+  // old simple sheets stored "3d"/"4h"; newer lists keep the hold time as written ("end of 7th day", "48 hours")
+  function shelfText(s) {
+    if (/^\d+$/.test(s)) s = s + "d";
+    if (/^\d+[dh]$/.test(s)) { const n = parseInt(s); return s.endsWith("h") ? `${n} hr${n === 1 ? "" : "s"}` : `${n} day${n === 1 ? "" : "s"}`; }
+    return String(s).replace(/\s*\(.*?\)/g, "");
+  }
+  // Turn a written hold time into the use-by line for the label.
+  // "end of 7th day" counts the prep day as day 1, so it's 6 days after prep, end of that day.
+  function parseHold(raw) {
+    let s = String(raw || "").trim(); if (!s) return { use: null, extra: null };
+    if (/^\d+d$/i.test(s)) s = parseInt(s) + " days"; else if (/^\d+h$/i.test(s)) s = parseInt(s) + " hours";
+    s = s.replace(/\s*\(.*?\)/g, "").trim();
+    let extra = null;
+    const wm = s.match(/^(.*?)\s+or\s+(.*?),?\s*whichever\b.*$/i);
+    if (wm) { s = wm[1].trim(); extra = ("OR " + wm[2].replace(/from initial heating/i, "from first heat") + " if sooner").toUpperCase(); }
+    const t = s.toLowerCase();
+    if (/immediately/.test(t)) return { use: /serve/.test(t) ? "SERVE IMMEDIATELY" : "USE IMMEDIATELY", extra };
+    if (/^varies/.test(t)) return { use: "HOLD TIME VARIES", extra: extra || "SEE PROCEDURE" };
+    if (/pack(ing)? date/.test(t)) return { use: `USE WITHIN ${t.replace(/from.*$/, "").trim().toUpperCase()} OF PACK DATE`, extra };
+    let m = t.match(/end of (?:the )?(\d+)(?:st|nd|rd|th)? day/) || t.match(/end of day (\d+)/);
+    if (m) { const k = Math.max(0, parseInt(m[1]) - 1); return { use: k ? `USE BY END OF {day+${k}} {date+${k}}` : "USE BY END OF DAY {day} {date}", extra }; }
+    if (/^end of (the )?day/.test(t)) return { use: "USE BY END OF DAY {day} {date}", extra };
+    m = t.match(/^(\d+(?:\.\d+)?)\s*(months?|mos?|minutes?|mins?|hours?|hrs?|h|days?|d|weeks?|wks?|w|m)?\b/);
+    if (m) {
+      const n = Math.round(parseFloat(m[1])), u = m[2] || "d";
+      if (/^mo/.test(u)) return { use: `USE BY {date+${n}mo}`, extra };
+      if (/^(minutes?|mins?|m)$/.test(u)) return { use: `USE BY {time+${n}m} {day+${n}m} {date+${n}m}`, extra };
+      if (/^(hours?|hrs?|h)$/.test(u)) return { use: `USE BY {day+${n}h} {date+${n}h} {time+${n}h}`, extra };
+      const days = /^w/.test(u) ? n * 7 : n;
+      return { use: `USE BY {day+${days}} {date+${days}}`, extra };
+    }
+    return { use: "USE BY: " + s.toUpperCase(), extra };
+  }
+  function categoryFor(cond) {
+    const c = String(cond || "").toLowerCase();
+    if (!c) return "";
+    if (/frozen|freezer/.test(c)) return "Frozen";
+    if (/room temp/.test(c)) return "Room temp";
+    if (/heat|cooked|in use|reheat|serve/.test(c)) return "Hot";
+    if (/refrig|make table|cold|on ice|on line|chopped|sliced|wedged|prepared/.test(c)) return "Refrigerated";
+    return "Other";
+  }
+  function sheetRows(csv) {
+    const rows = parseCsv(csv); if (!rows.length) return [];
+    const head = rows[0].map(h => h.toLowerCase().trim());
+    const find = re => head.findIndex(h => re.test(h));
+    let ni = find(/^(item|name|product)/), hi = find(/hold|shelf|life|use.?by|expir/), ci = find(/condition|storage|preparation|state/);
+    const ti = find(/^(categ|type|group|station)/), oi = find(/note|limit|comment/);
+    let body = rows.slice(1);
+    if (ni < 0 && hi < 0) { ni = 0; hi = 1; body = rows; } // no header row
+    if (ni < 0) ni = 0;
+    const out = new Map();
+    for (const r of body) {
+      const item = (r[ni] || "").trim(); if (!item) continue;
+      const condition = ci >= 0 ? (r[ci] || "").trim() : "";
+      const name = condition ? `${item} – ${condition}` : item;
+      out.set(name.toLowerCase(), {
+        name, item, condition,
+        shelf: hi >= 0 ? ((r[hi] || "").trim() || null) : null,
+        category: ti >= 0 ? (r[ti] || "").trim() : categoryFor(condition),
+        note: oi >= 0 ? (r[oi] || "").trim() : "",
+      });
+    }
+    return [...out.values()];
+  }
+  async function sheetDesign(row) {
+    const { use, extra } = parseHold(row.shelf);
+    const title = newText((row.item || row.name).toUpperCase(), { font: "Bebas Neue", size: 56, lineH: 0.95 });
+    const items = [title];
+    if (row.condition) items.push(newText(row.condition, { size: 20 }));
+    items.push(newText("PREP {day} {date} {time}", { size: 21 }));
+    if (use) items.push(newText(use, { size: 25, bold: true }));
+    if (extra) items.push(newText(extra, { size: 17, bold: true }));
+    const d = { wmm: 50.8, hmm: 25.4, border: false, invertAll: false, items };
+    await fontsReady(items);
+    const { W, H } = dims(d), gap = 4, total = () => items.reduce((a, it) => a + bbox(it).h, 0) + gap * (items.length - 1);
+    fitText(title, false, d);
+    // long names: break onto two lines instead of shrinking to nothing
+    if (title.size < 34 && title.text.includes(" ")) {
+      const words = title.text.split(" "); let best = 1, diff = Infinity;
+      for (let k = 1; k < words.length; k++) { const a = words.slice(0, k).join(" ").length, b = words.slice(k).join(" ").length; if (Math.abs(a - b) < diff) { diff = Math.abs(a - b); best = k; } }
+      title.text = words.slice(0, best).join(" ") + "\n" + words.slice(best).join(" "); title.size = 52; fitText(title, false, d);
+    }
+    for (const it of items.slice(1)) fitText(it, false, d);
+    // shrink until the whole stack fits the label height
+    for (let k = 0; k < 12 && total() > H - 6; k++) {
+      if (title.size > 22) title.size = Math.floor(title.size * 0.92);
+      else for (const it of items.slice(1)) it.size = Math.max(12, Math.floor(it.size * 0.94));
+    }
+    let y = Math.max(3, Math.round((H - total()) / 2));
+    for (const it of items) { it.y = y; it.x = Math.round((W - bbox(it).w) / 2); y += bbox(it).h + gap; }
+    return serialize(d);
+  }
+  function retimeDesign(design, row) {
+    // keep a customized design, just swap its use-by line for the new hold time
+    const { use } = parseHold(row.shelf); if (!use) return design;
+    for (const it of design.items) if (it.type === "text" && /^(USE|SERVE|HOLD)\b/i.test(it.text.trim())) it.text = use;
+    return design;
+  }
+
+  let pendingSync = null;
+  function computeDiff(rows) {
+    const byKey = new Map(store.labels.map(l => [l.name.toLowerCase(), l]));
+    const add = [], change = [], remove = [], link = [];
+    const keys = new Set(rows.map(r => r.name.toLowerCase()));
+    for (const r of rows) {
+      const lab = byKey.get(r.name.toLowerCase());
+      if (!lab) add.push(r);
+      else if (lab.source !== "sheet") link.push({ lab, r });
+      else if ((lab.shelf || null) !== (r.shelf || null) || (lab.category || "") !== r.category || (lab.note || "") !== (r.note || "") || lab.name !== r.name) change.push({ lab, r });
+    }
+    for (const lab of store.labels) if (lab.source === "sheet" && !keys.has(lab.name.toLowerCase())) remove.push(lab);
+    return { add, change, remove, link };
+  }
+  function setSheetState(text) { $("sheetState").textContent = text; }
+  async function checkSheet(manual) {
+    const url = sheetCsvUrl(store.sheetUrl);
+    if (!url) { if (manual) toast("Paste your Google Sheet link first.", "bad"); setSheetState("Not set up"); return; }
+    setSheetState("Checking…");
+    let csv;
+    try {
+      const r = await fetch(url, { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      csv = await r.text();
+      if (/^\s*<(!doctype|html)/i.test(csv)) throw new Error("the sheet isn't shared");
+    } catch (err) {
+      setSheetState("Couldn't reach the sheet");
+      toast(manual ? `Couldn't read the sheet. Check that it's shared as "Anyone with the link" and that you're online. (${err.message})` : "Couldn't check the Google Sheet. Using your saved list.", "bad", 8000);
+      return;
+    }
+    const rows = sheetRows(csv);
+    if (!rows.length) { setSheetState("The sheet looks empty"); if (manual) toast("No items found in the sheet. Row 1 should be headers: Item, Shelf life, Category.", "bad"); return; }
+    const diff = computeDiff(rows);
+    // labels you made by hand that match a sheet row get linked quietly (nothing about them changes)
+    if (diff.link.length) { for (const { lab, r } of diff.link) Object.assign(lab, { source: "sheet", custom: true, category: lab.category || r.category, shelf: lab.shelf || null }); persist(); }
+    store.sheetChecked = new Date().toISOString(); persist();
+    const total = diff.add.length + diff.change.length + diff.remove.length;
+    setSheetState(`Checked ${new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}: ${rows.length} items`);
+    if (!total) { pendingSync = null; $("syncBanner").hidden = true; if (manual) toast("Your list matches the sheet", "ok"); renderPrint(); return; }
+    pendingSync = diff;
+    const parts = [];
+    if (diff.add.length) parts.push(`${diff.add.length} new`);
+    if (diff.change.length) parts.push(`${diff.change.length} changed`);
+    if (diff.remove.length) parts.push(`${diff.remove.length} removed`);
+    $("syncSummary").textContent = parts.join(", ");
+    $("syncBanner").hidden = false;
+    if (manual) { go("print"); openSyncDialog(); }
+    renderPrint();
+  }
+  function openSyncDialog() {
+    const d = pendingSync; if (!d) return;
+    const el = $("syncList"); el.innerHTML = "";
+    const group = (title, list, fmt, key) => {
+      if (!list.length) return;
+      const h = document.createElement("h4"); h.textContent = title; el.appendChild(h);
+      list.forEach((x, i) => {
+        const l = document.createElement("label"); const [a, b] = fmt(x);
+        l.innerHTML = `<input type="checkbox" checked data-g="${key}" data-i="${i}"><span></span><small></small>`;
+        l.querySelector("span").textContent = a; l.querySelector("small").textContent = b; el.appendChild(l);
+      });
+    };
+    group("New items", d.add, r => [r.name, [r.shelf && shelfText(r.shelf), r.category].filter(Boolean).join(" · ")], "add");
+    group("Changed", d.change, ({ lab, r }) => [r.name, [
+      (lab.shelf || null) !== (r.shelf || null) ? `${lab.shelf ? shelfText(lab.shelf) : "no use-by"} → ${r.shelf ? shelfText(r.shelf) : "no use-by"}` : "",
+      (lab.note || "") !== (r.note || "") ? "note" : "",
+      (lab.category || "") !== r.category ? `${lab.category || "no category"} → ${r.category || "no category"}` : "",
+      lab.name !== r.name ? "name" : "",
+    ].filter(Boolean).join(", ")], "change");
+    group("No longer in the list (will be deleted)", d.remove, lab => [lab.name, ""], "remove");
+    $("dlgSync").showModal();
+  }
+  $("syncReview").onclick = openSyncDialog;
+  $("syncLater").onclick = () => { $("syncBanner").hidden = true; };
+  $("syncCancel").onclick = () => $("dlgSync").close();
+  $("syncApply").onclick = async () => {
+    const d = pendingSync; if (!d) return;
+    const picked = g => [...$("syncList").querySelectorAll(`input[data-g="${g}"]`)].filter(x => x.checked).map(x => +x.dataset.i);
+    const btn = $("syncApply"); btn.disabled = true; btn.textContent = "Updating…";
+    try {
+      const adds = picked("add"), changes = picked("change"), all = adds.length + changes.length; let k = 0;
+      const tick = async () => { k++; if (k % 5 === 0 || k === all) { btn.textContent = `Making labels ${k} of ${all}…`; await new Promise(r => setTimeout(r)); } };
+      for (const i of adds) {
+        const r = d.add[i], design = await sheetDesign(r);
+        store.labels.push({ id: newId("L"), name: r.name, design, thumb: await makeThumb(design), source: "sheet", shelf: r.shelf, category: r.category, note: r.note || "" });
+        await tick();
+      }
+      for (const i of changes) {
+        const { lab, r } = d.change[i];
+        // your own designs are never replaced; only their use-by line follows the list
+        const design = lab.custom ? (r.shelf ? retimeDesign(lab.design, r) : lab.design) : await sheetDesign(r);
+        Object.assign(lab, { name: r.name, shelf: r.shelf, category: r.category, note: r.note || "", design, thumb: await makeThumb(design) });
+        await tick();
+      }
+      const gone = new Set(picked("remove").map(i => d.remove[i].id));
+      if (gone.size) {
+        store.labels = store.labels.filter(l => !gone.has(l.id));
+        for (const b of store.batches) b.entries = b.entries.filter(e => !gone.has(e.labelId));
+        for (const id of gone) delete qty[id];
+      }
+      store.labels.sort(byName); persist();
+      toast(`Prep list updated: ${adds.length} added, ${changes.length} changed`, "ok");
+      if (picked("add").length) { printMode = "prep"; LS.set("labelstudio.printMode", "prep"); }
+    } catch (err) { toast("Update failed: " + (err && err.message || err), "bad"); }
+    finally { btn.disabled = false; btn.textContent = "Update list"; }
+    $("dlgSync").close(); pendingSync = null; $("syncBanner").hidden = true; renderPrint();
+    checkSheet(false);
+  };
+  $("sheetUrl").value = store.sheetUrl || "";
+  $("sheetUrl").onchange = () => { store.sheetUrl = $("sheetUrl").value.trim(); persist(); };
+  $("sheetCheck").onclick = () => { store.sheetUrl = $("sheetUrl").value.trim(); persist(); checkSheet(true); };
+  $("sheetHelpBtn").onclick = () => { $("sheetHelp").hidden = !$("sheetHelp").hidden; };
+  // import a prep list from a .csv file (same columns as the Google Sheet)
+  async function importPrepFile(file) {
+    try {
+      const rows = sheetRows(await file.text());
+      if (!rows.length) return toast("No items found in that file. Row 1 should be headers like Item, Hold time.", "bad");
+      const diff = computeDiff(rows);
+      if (diff.link.length) { for (const { lab, r } of diff.link) Object.assign(lab, { source: "sheet", custom: true, category: lab.category || r.category, shelf: lab.shelf || null }); persist(); }
+      // a file adds and updates; it doesn't delete prep items that aren't in it
+      diff.remove = [];
+      if (!diff.add.length && !diff.change.length) return toast("Everything in that file is already in your prep list.", "ok");
+      pendingSync = diff; go("print"); openSyncDialog();
+    } catch (err) { toast("Couldn't read that file: " + (err && err.message || err), "bad"); }
+  }
+  $("prepFileBtn").onclick = () => $("prepFile").click();
+  $("prepFile").onchange = e => { const f = e.target.files[0]; e.target.value = ""; if (f) importPrepFile(f); };
+
+  // =================================================================
+  // init
+  // =================================================================
+  startNew();
+  if (!store.labels.length) { /* nothing */ }
+  renderPrint(); setConn(); showTab();
+  autoConnect("startup");
+  if (store.sheetUrl) document.fonts.ready.then(() => checkSheet(false));
+  restoreFonts().then(() => document.fonts.ready).then(async () => { await fillThumbs(); renderPrint(); renderEditor(); drawPreview(); });
+  window.addEventListener("beforeunload", e => { if (dirty && store.labels.some(l => l.id === editingId)) { e.preventDefault(); e.returnValue = ""; } });
+})();
+</script>
+</body>
+</html>
